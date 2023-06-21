@@ -28,5 +28,6 @@
     "instruction": "Anweisung",
     "create": "Erstellen",
     "your_creation_text": "& Wähle deinen Typ!",
-    "name": "Name"
+    "name": "Name",
+    "mandatory_field": "Pflichtfeld"
 }

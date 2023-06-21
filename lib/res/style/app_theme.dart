@@ -8,13 +8,13 @@ class AppTheme {
 
   static final Color _primaryColor = HexColor('BC9635');
   static final Color secondaryColor = HexColor('F0DBA4');
-  static final Color _errorColor = HexColor('');
+  static final Color _errorColor = Colors.red;//HexColor('F0DBA4');
   static final Color _elevatedButtonBackgroundColor = HexColor('484040');
   static final Color _drawerBackgroundcolor = HexColor('32241F');
 
   static const AssetImage backgroundImage =
       AssetImage('assets/images/background.jpg');
-  //TODO: Attribute for the picture
+  //TODOAttribute for the picture
   //How to attribute? Paste link in description or in app
   //"https://www.freepik.com/free-photo/brown-wooden-flooring_4246371.htm#query=wood%20background&position=0&from_view=keyword&track=ais" => Image by rawpixel.com on Freepik
   static const AssetImage woodBackgroundImage =

@@ -3,9 +3,11 @@ import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:localization/localization.dart';
+import 'package:provider/provider.dart';
 import 'package:the_bartender_app/res/style/app_theme.dart';
-import 'package:the_bartender_app/utils/enums.dart';
+import 'package:the_bartender_app/utils/route_util.dart';
 import 'package:the_bartender_app/utils/routes/router.gr.dart';
+import 'package:the_bartender_app/viewmodels/recipe_view_model.dart';
 import 'package:the_bartender_app/widgets/styled_button.dart';
 import 'package:the_bartender_app/widgets/styled_drawer.dart';
 import 'package:the_bartender_app/widgets/styled_textfield.dart';
@@ -16,6 +18,12 @@ class RecipeView extends StatelessWidget {
   RecipeView({super.key});
 
   void onSearchPressed(BuildContext context) {
+    Provider.of<RecipeViewModel>(context, listen: false)
+        .setSearchText(searchTextController.text);
+
+    Provider.of<RecipeViewModel>(context, listen: false)
+        .fetchRecipeData(searchTextController.text);
+
     AutoRouter.of(context).push(RecipeSearchResultViewRoute());
   }
 
@@ -57,60 +65,55 @@ class RecipeView extends StatelessWidget {
                     ),
                     SliverList(
                       delegate: SliverChildBuilderDelegate(
-                        (context, index) =>
-                            OrientationBuilder(builder: (context, orientation) {
-                          return Column(
-                            children: [
-                              const SizedBox(height: 20),
-                              SvgPicture.asset(
-                                'assets/svg/neon_find.svg',
-                                width: MediaQuery.of(context).size.width * 0.85,
-                              ),
-                              Container(
-                                padding: const EdgeInsets.all(25),
-                                child: Text(
-                                  'search_text'.i18n(),
-                                  style:
-                                      AppTheme.themeData.textTheme.titleSmall,
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                              const SizedBox(height: 20),
-                              Container(
-                                width: double.infinity,
-                                padding: const EdgeInsets.only(left: 20.0),
-                                child: Text(
-                                  '${'search'.i18n()}...',
-                                  style:
-                                      AppTheme.themeData.textTheme.titleSmall,
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 20.0, right: 20),
-                                child: StyledTextfield(
-                                  controller: searchTextController,
-                                  suffixIcon: CommunityMaterialIcons.magnify,
-                                  onSuffixIconPressed: () {},
-                                ),
-                              ),
-                              const SizedBox(height: 15),
-                              Text(
-                                'or'.i18n(),
+                        (context, index) => Column(
+                          children: [
+                            const SizedBox(height: 20),
+                            SvgPicture.asset(
+                              'assets/svg/neon_find.svg',
+                              width: MediaQuery.of(context).size.width * 0.85,
+                            ),
+                            Container(
+                              padding: const EdgeInsets.all(25),
+                              child: Text(
+                                'search_text'.i18n(),
                                 style: AppTheme.themeData.textTheme.titleSmall,
                                 textAlign: TextAlign.center,
                               ),
-                              IconButton(
-                                onPressed: () {},
-                                padding: const EdgeInsets.only(right: 20),
-                                icon: const Icon(
-                                  CommunityMaterialIcons.filter_outline,
-                                  size: 50,
-                                ),
+                            ),
+                            const SizedBox(height: 20),
+                            Container(
+                              width: double.infinity,
+                              padding: const EdgeInsets.only(left: 20.0),
+                              child: Text(
+                                '${'search'.i18n()}...',
+                                style: AppTheme.themeData.textTheme.titleSmall,
                               ),
-                            ],
-                          );
-                        }),
+                            ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(left: 20.0, right: 20),
+                              child: StyledTextfield(
+                                controller: searchTextController,
+                                suffixIcon: CommunityMaterialIcons.magnify,
+                                onSuffixIconPressed: () {},
+                              ),
+                            ),
+                            const SizedBox(height: 15),
+                            Text(
+                              'or'.i18n(),
+                              style: AppTheme.themeData.textTheme.titleSmall,
+                              textAlign: TextAlign.center,
+                            ),
+                            IconButton(
+                              onPressed: () {},
+                              padding: const EdgeInsets.only(right: 20),
+                              icon: const Icon(
+                                CommunityMaterialIcons.filter_outline,
+                                size: 50,
+                              ),
+                            ),
+                          ],
+                        ),
                         childCount: 1,
                       ),
                     ),

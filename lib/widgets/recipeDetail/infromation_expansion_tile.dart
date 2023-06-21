@@ -1,10 +1,15 @@
 import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:localization/localization.dart';
+import 'package:the_bartender_app/models/recipe.dart';
 import 'package:the_bartender_app/res/style/app_theme.dart';
+import 'package:the_bartender_app/utils/string_util.dart';
 
 class InformationExpansionTile extends StatelessWidget {
-  const InformationExpansionTile({super.key});
+  final RecipeDetail recipe;
+  const InformationExpansionTile({super.key, required this.recipe});
+
+  final bool radioAlcoholicGroupValue = true;
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +20,7 @@ class InformationExpansionTile extends StatelessWidget {
         color: AppTheme.themeData.colorScheme.primary,
         size: 40,
       ),
-      title: Text( 
+      title: Text(
         'information'.i18n(),
         style: AppTheme.themeData.textTheme.titleSmall!.copyWith(
           color: AppTheme.themeData.colorScheme.primary,
@@ -43,7 +48,7 @@ class InformationExpansionTile extends StatelessWidget {
                   child: Row(
                     children: [
                       Text(
-                        '10',
+                        recipe.prepTimeMinutes.toString(),
                         style: AppTheme.themeData.textTheme.bodyMedium,
                       ),
                       const SizedBox(width: 30),
@@ -71,7 +76,7 @@ class InformationExpansionTile extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(left: 40.0),
                   child: Text(
-                    'Summer',
+                    capitalizeFirstLetter(recipe.season.name),
                     style: AppTheme.themeData.textTheme.bodyMedium,
                   ),
                 ),
@@ -93,16 +98,14 @@ class InformationExpansionTile extends StatelessWidget {
                   padding: const EdgeInsets.only(left: 40.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Knife',
-                        style: AppTheme.themeData.textTheme.bodyMedium,
-                      ),
-                      Text(
-                        'Teaspoon',
-                        style: AppTheme.themeData.textTheme.bodyMedium,
-                      ),
-                    ],
+                    children: recipe.tools
+                        .map(
+                          (e) => Text(
+                            e.name,
+                            style: AppTheme.themeData.textTheme.bodyMedium,
+                          ),
+                        )
+                        .toList(),
                   ),
                 ),
               ],
@@ -128,8 +131,8 @@ class InformationExpansionTile extends StatelessWidget {
                           Transform.scale(
                             scale: 0.8,
                             child: Radio(
-                              value: true,
-                              groupValue: true,
+                              value:  recipe.alcoholic,
+                              groupValue: radioAlcoholicGroupValue,
                               onChanged: (value) {},
                               activeColor: AppTheme.secondaryColor,
                             ),
@@ -149,8 +152,8 @@ class InformationExpansionTile extends StatelessWidget {
                           Transform.scale(
                             scale: 0.8,
                             child: Radio(
-                              value: false,
-                              groupValue: true,
+                              value: !recipe.alcoholic,
+                              groupValue: radioAlcoholicGroupValue,
                               onChanged: (value) {},
                               activeColor: AppTheme.secondaryColor,
                             ),

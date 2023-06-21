@@ -5,8 +5,12 @@ import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:localization/localization.dart';
+import 'package:provider/provider.dart';
+import 'package:the_bartender_app/data/api/api_response.dart';
+import 'package:the_bartender_app/models/recipe.dart';
 import 'package:the_bartender_app/res/style/app_theme.dart';
-import 'package:the_bartender_app/utils/enums.dart';
+import 'package:the_bartender_app/utils/route_util.dart';
+import 'package:the_bartender_app/viewmodels/recipe_view_model.dart';
 import 'package:the_bartender_app/widgets/cocktail_card.dart';
 import 'package:the_bartender_app/widgets/styled_drawer.dart';
 
@@ -66,7 +70,7 @@ class RecipeSearchResultView extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(bottom: 25),
                       child: Text(
-                        '"Apple juice" + "Longdrink"',
+                        '${Provider.of<RecipeViewModel>(context).searchText}',
                         style: AppTheme.themeData.textTheme.titleSmall,
                         textAlign: TextAlign.center,
                       ),
@@ -74,18 +78,34 @@ class RecipeSearchResultView extends StatelessWidget {
                   ],
                 ),
               ),
-              SliverGrid.count(
-                crossAxisCount:
-                    (MediaQuery.of(context).size.width / 200).round(),
-                mainAxisSpacing: 20,
-                crossAxisSpacing: 10,
-                childAspectRatio: (180 / 250),
-                children: List.generate(5, (index) => const CocktailCard()),
-              ),
+              Consumer<RecipeViewModel>(
+                  builder: (context, value, child) =>
+                      getRecipeWidgetList(context, value)),
             ],
           ),
         ),
       ),
     );
+  }
+
+  Widget getRecipeWidgetList(BuildContext context, RecipeViewModel value) {
+    ApiResponse apiResponse = value.response;
+
+    switch (apiResponse.status) {
+      case Status.initial || Status.loading:
+        return  const SliverToBoxAdapter(child: Center(child: CircularProgressIndicator.adaptive()));
+      case Status.completed:
+        List<Recipe> recipeList = apiResponse.data as List<Recipe>;
+        return SliverGrid.count(
+          crossAxisCount: (MediaQuery.of(context).size.width / 200).round(),
+          mainAxisSpacing: 20,
+          crossAxisSpacing: 10,
+          childAspectRatio: (180 / 250),
+          children: recipeList.map((val) => CocktailCard(recipe: val)).toList(),
+        );
+      case Status.error:
+        return SliverToBoxAdapter(
+            child: ErrorWidget(Exception())); //TODOErrorWidget and Excpetion
+    }
   }
 }

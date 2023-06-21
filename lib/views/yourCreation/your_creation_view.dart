@@ -3,20 +3,38 @@ import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:localization/localization.dart';
+import 'package:provider/provider.dart';
+import 'package:the_bartender_app/models/season.dart';
 import 'package:the_bartender_app/res/style/app_theme.dart';
-import 'package:the_bartender_app/utils/enums.dart';
+import 'package:the_bartender_app/utils/enum.dart';
+import 'package:the_bartender_app/utils/route_util.dart';
 import 'package:the_bartender_app/utils/routes/router.gr.dart';
+import 'package:the_bartender_app/viewmodels/creation_view_model.dart';
+import 'package:the_bartender_app/widgets/recipeCreate/animated_carousel.dart';
 import 'package:the_bartender_app/widgets/styled_button.dart';
 import 'package:the_bartender_app/widgets/styled_drawer.dart';
 import 'package:the_bartender_app/widgets/styled_textfield.dart';
 
 class YourCreationView extends StatelessWidget {
   final TextEditingController nameController = TextEditingController();
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   YourCreationView({super.key});
 
   void onCreatePressed(BuildContext context) {
-    AutoRouter.of(context).push(YourCreationDetailViewRoute());
+    if (formKey.currentState!.validate()) {
+      DrinkTypeEnum drinkTypeEnum =
+          DrinkTypeEnum.values[0]; //TODOGet drinktypeEnum
+      String name = nameController.text;
+
+      List<Season>? seasonList =
+          Provider.of<CreationViewModel>(context, listen: false).seasonList;
+      if (seasonList == null || seasonList.isEmpty) {
+        Provider.of<CreationViewModel>(context, listen: false).fetchSeasonData();
+      }
+      AutoRouter.of(context).push(YourCreationDetailViewRoute(
+          drinkTypeEnum: drinkTypeEnum, name: name));
+    }
   }
 
   @override
@@ -57,174 +75,56 @@ class YourCreationView extends StatelessWidget {
                     ),
                     SliverList(
                       delegate: SliverChildBuilderDelegate(
-                        (context, index) =>
-                            OrientationBuilder(builder: (context, orientation) {
-                          return Column(
-                            children: [
-                              const SizedBox(height: 20),
-                              SvgPicture.asset(
-                                'assets/svg/neon_create.svg',
-                                width: MediaQuery.of(context).size.width * 0.85,
+                        (context, index) {
+                          var children2 = [
+                            const SizedBox(height: 20),
+                            SvgPicture.asset(
+                              'assets/svg/neon_create.svg',
+                              width: MediaQuery.of(context).size.width * 0.85,
+                            ),
+                            Container(
+                              padding: const EdgeInsets.all(25),
+                              child: Text(
+                                'your_creation_text'.i18n(),
+                                style: AppTheme.themeData.textTheme.titleSmall,
+                                textAlign: TextAlign.center,
                               ),
-                              Container(
-                                padding: const EdgeInsets.all(25),
-                                child: Text(
-                                  'your_creation_text'.i18n(),
-                                  style:
-                                      AppTheme.themeData.textTheme.titleSmall,
-                                  textAlign: TextAlign.center,
+                            ),
+                            const SizedBox(height: 10),
+                            const AnimatedCarousel(),
+                            const SizedBox(height: 20),
+                            Container(
+                              width: double.infinity,
+                              padding: const EdgeInsets.only(left: 20.0),
+                              child: Text(
+                                'name'.i18n(),
+                                style: AppTheme.themeData.textTheme.bodySmall!
+                                    .copyWith(
+                                  fontStyle: FontStyle.italic,
                                 ),
                               ),
-                              const SizedBox(height: 10),
-                              Container(
-                                constraints:
-                                    const BoxConstraints(maxWidth: 400),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Stack(
-                                      alignment: Alignment.center,
-                                      children: [
-                                        Opacity(
-                                          opacity: 0.6,
-                                          child: Stack(
-                                            children: [
-                                              Container(
-                                                alignment: Alignment.center,
-                                                height: 150,
-                                                width: 100,
-                                                child: SvgPicture.asset(
-                                                  'assets/svg/cocktail.svg',
-                                                  height: 200,
-                                                ),
-                                              ),
-                                              Container(
-                                                height: 160,
-                                                width: 100,
-                                                alignment:
-                                                    Alignment.bottomRight,
-                                                child: Transform.rotate(
-                                                  angle: -0.60,
-                                                  child: Text(
-                                                    'Shot',
-                                                    style: AppTheme.themeData
-                                                        .textTheme.titleMedium!
-                                                        .copyWith(fontSize: 25),
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        IconButton(
-                                          onPressed: () {},
-                                          icon: Icon(
-                                            CommunityMaterialIcons.chevron_left,
-                                            color: AppTheme
-                                                .themeData.colorScheme.primary,
-                                          ),
-                                          iconSize: 80,
-                                        ),
-                                      ],
-                                    ),
-                                    Stack(
-                                      children: [
-                                        Container(
-                                          alignment: Alignment.center,
-                                          height: 200,
-                                          width: 150,
-                                          child: SvgPicture.asset(
-                                            'assets/svg/cocktail.svg',
-                                            height: 200,
-                                          ),
-                                        ),
-                                        Container(
-                                          height: 210,
-                                          width: 150,
-                                          alignment: Alignment.bottomRight,
-                                          child: Transform.rotate(
-                                            angle: -0.60,
-                                            child: Text(
-                                              'Longdrink',
-                                              style: AppTheme.themeData
-                                                  .textTheme.titleMedium,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    Stack(
-                                      alignment: Alignment.center,
-                                      children: [
-                                        Opacity(
-                                          opacity: 0.6,
-                                          child: Stack(
-                                            children: [
-                                              Container(
-                                                alignment: Alignment.center,
-                                                height: 150,
-                                                width: 100,
-                                                child: SvgPicture.asset(
-                                                  'assets/svg/cocktail.svg',
-                                                  height: 200,
-                                                ),
-                                              ),
-                                              Container(
-                                                height: 160,
-                                                width: 100,
-                                                alignment:
-                                                    Alignment.bottomRight,
-                                                child: Transform.rotate(
-                                                  angle: -0.60,
-                                                  child: Text(
-                                                    'Martini',
-                                                    style: AppTheme.themeData
-                                                        .textTheme.titleMedium!
-                                                        .copyWith(fontSize: 25),
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        IconButton(
-                                          onPressed: () {},
-                                          icon: Icon(
-                                            CommunityMaterialIcons
-                                                .chevron_right,
-                                            color: AppTheme
-                                                .themeData.colorScheme.primary,
-                                          ),
-                                          iconSize: 80,
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              const SizedBox(height: 20),
-                              Container(
-                                width: double.infinity,
-                                padding: const EdgeInsets.only(left: 20.0),
-                                child: Text(
-                                  'name'.i18n(),
-                                  style: AppTheme.themeData.textTheme.bodySmall!
-                                      .copyWith(
-                                    fontStyle: FontStyle.italic,
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 20.0, right: 20),
+                            ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(left: 20.0, right: 20),
+                              child: Form(
+                                key: formKey,
                                 child: StyledTextfield(
                                   controller: nameController,
+                                  validator: (String value) {
+                                    if (value.isEmpty || value == '') {
+                                      return 'mandatory_field'.i18n();
+                                    }
+                                  },
                                 ),
                               ),
-                              const SizedBox(height: 15),
-                            ],
+                            ),
+                            const SizedBox(height: 15),
+                          ];
+                          return Column(
+                            children: children2,
                           );
-                        }),
+                        },
                         childCount: 1,
                       ),
                     ),

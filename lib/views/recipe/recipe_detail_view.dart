@@ -4,8 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_stars/flutter_rating_stars.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:localization/localization.dart';
+import 'package:provider/provider.dart';
+import 'package:the_bartender_app/data/api/api_response.dart';
+import 'package:the_bartender_app/models/recipe.dart';
 import 'package:the_bartender_app/res/style/app_theme.dart';
-import 'package:the_bartender_app/utils/enums.dart';
+import 'package:the_bartender_app/utils/route_util.dart';
+import 'package:the_bartender_app/viewmodels/recipe_detail_view_model.dart';
 import 'package:the_bartender_app/widgets/recipeDetail/infromation_expansion_tile.dart';
 import 'package:the_bartender_app/widgets/recipeDetail/ingredient_expansion_tile.dart';
 import 'package:the_bartender_app/widgets/recipeDetail/instruction_expansion_tile.dart';
@@ -52,65 +56,19 @@ class RecipeDetailView extends StatelessWidget {
               ),
               SliverList(
                 delegate: SliverChildBuilderDelegate(
-                  (context, index) => Column(
-                    children: [
-                      Text(
-                        'Fruit Punch',
-                        style: AppTheme.themeData.textTheme.titleLarge,
-                        textAlign: TextAlign.center,
-                      ),
-                      Stack(
-                        children: [
-                          Container(
-                            alignment: Alignment.center,
-                            height: 200,
-                            width: 150,
-                            child: SvgPicture.asset(
-                              'assets/svg/cocktail.svg',
-                              height: 200,
-                            ),
-                          ),
-                          Container(
-                            height: 210,
-                            width: 150,
-                            alignment: Alignment.bottomRight,
-                            child: Transform.rotate(
-                              angle: -0.60,
-                              child: Text(
-                                'Longdrink',
-                                style: AppTheme.themeData.textTheme.titleMedium,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 20),
-                      Text(
-                        'recipe_detail_text'.i18n(),
-                        style: AppTheme.themeData.textTheme.displayMedium,
-                        textAlign: TextAlign.center,
-                      ),
-                      const SizedBox(height: 20),
-                      const InformationExpansionTile(),
-                      const Divider(),
-                      const IngredientExpansionTile(),
-                      const Divider(),
-                      const InstructionExpansionTile(),
-                      RatingStars(
-                        starBuilder: (index, color) {
-                          return color == Colors.transparent
-                              ? const Icon(CommunityMaterialIcons.star_outline)
-                              : const Icon(CommunityMaterialIcons.star);
-                        },
-                        value: 3,
-                        starColor: Colors.white,
-                        starOffColor: Colors.transparent,
-                        valueLabelVisibility: false,
-                        starSize: 25,
-                      ),
-                      const SizedBox(height: 30),
-                    ],
-                  ),
+                  (context, index) => Consumer<RecipeDetailViewModel>(
+                      builder: (context, value, child) {
+                    switch (value.response.status) {
+                      case Status.initial || Status.loading:
+                        return const Center(
+                          child: CircularProgressIndicator.adaptive(),
+                        );
+                      case Status.completed:
+                        return  RecipeDetailWidget(recipe: value.recipe!);
+                      case Status.error:
+                        return ErrorWidget(Exception()); //TODOErrorWidget
+                    }
+                  }),
                   childCount: 1,
                 ),
               ),
@@ -118,6 +76,76 @@ class RecipeDetailView extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class RecipeDetailWidget extends StatelessWidget {
+  final RecipeDetail recipe;
+  const RecipeDetailWidget({
+    super.key, required this.recipe,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Text(
+          recipe.name,
+          style: AppTheme.themeData.textTheme.titleLarge,
+          textAlign: TextAlign.center,
+        ),
+        Stack(
+          children: [
+            Container(
+              alignment: Alignment.center,
+              height: 200,
+              width: 150,
+              child: SvgPicture.asset(
+                'assets/svg/cocktail.svg',
+                height: 200,
+              ),
+            ),
+            Container(
+              height: 210,
+              width: 150,
+              alignment: Alignment.bottomRight,
+              child: Transform.rotate(
+                angle: -0.60,
+                child: Text(
+                  recipe.drinkType.name,
+                  style: AppTheme.themeData.textTheme.titleMedium,
+                ),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 20),
+        Text(
+          'recipe_detail_text'.i18n(),
+          style: AppTheme.themeData.textTheme.displayMedium,
+          textAlign: TextAlign.center,
+        ),
+        const SizedBox(height: 20),
+        InformationExpansionTile(recipe: recipe),
+        const Divider(),
+        IngredientExpansionTile(recipe: recipe),
+        const Divider(),
+        InstructionExpansionTile(recipe: recipe),
+        RatingStars(
+          starBuilder: (index, color) {
+            return color == Colors.transparent
+                ? const Icon(CommunityMaterialIcons.star_outline)
+                : const Icon(CommunityMaterialIcons.star);
+          },
+          value: recipe.rating.toDouble(),
+          starColor: Colors.white,
+          starOffColor: Colors.transparent,
+          valueLabelVisibility: false,
+          starSize: 25,
+        ),
+        const SizedBox(height: 30),
+      ],
     );
   }
 }

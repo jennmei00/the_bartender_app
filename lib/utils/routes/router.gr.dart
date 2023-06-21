@@ -22,6 +22,7 @@ import '../../views/recipe/recipe_search_result_view.dart' as _i6;
 import '../../views/recipe/recipe_view.dart' as _i2;
 import '../../views/yourCreation/your_creation_detail_view.dart' as _i8;
 import '../../views/yourCreation/your_creation_view.dart' as _i3;
+import '../enum.dart' as _i11;
 
 class AppRouter extends _i9.RootStackRouter {
   AppRouter([_i10.GlobalKey<_i10.NavigatorState>? navigatorKey])
@@ -80,11 +81,14 @@ class AppRouter extends _i9.RootStackRouter {
       );
     },
     YourCreationDetailViewRoute.name: (routeData) {
-      final args = routeData.argsAs<YourCreationDetailViewRouteArgs>(
-          orElse: () => const YourCreationDetailViewRouteArgs());
+      final args = routeData.argsAs<YourCreationDetailViewRouteArgs>();
       return _i9.MaterialPageX<dynamic>(
         routeData: routeData,
-        child: _i8.YourCreationDetailView(key: args.key),
+        child: _i8.YourCreationDetailView(
+          key: args.key,
+          drinkTypeEnum: args.drinkTypeEnum,
+          name: args.name,
+        ),
       );
     },
   };
@@ -265,23 +269,38 @@ class RecipeDetailViewRouteArgs {
 /// [_i8.YourCreationDetailView]
 class YourCreationDetailViewRoute
     extends _i9.PageRouteInfo<YourCreationDetailViewRouteArgs> {
-  YourCreationDetailViewRoute({_i10.Key? key})
-      : super(
+  YourCreationDetailViewRoute({
+    _i10.Key? key,
+    required _i11.DrinkTypeEnum drinkTypeEnum,
+    required String name,
+  }) : super(
           YourCreationDetailViewRoute.name,
           path: '/your-creation-detail-view',
-          args: YourCreationDetailViewRouteArgs(key: key),
+          args: YourCreationDetailViewRouteArgs(
+            key: key,
+            drinkTypeEnum: drinkTypeEnum,
+            name: name,
+          ),
         );
 
   static const String name = 'YourCreationDetailViewRoute';
 }
 
 class YourCreationDetailViewRouteArgs {
-  const YourCreationDetailViewRouteArgs({this.key});
+  const YourCreationDetailViewRouteArgs({
+    this.key,
+    required this.drinkTypeEnum,
+    required this.name,
+  });
 
   final _i10.Key? key;
 
+  final _i11.DrinkTypeEnum drinkTypeEnum;
+
+  final String name;
+
   @override
   String toString() {
-    return 'YourCreationDetailViewRouteArgs{key: $key}';
+    return 'YourCreationDetailViewRouteArgs{key: $key, drinkTypeEnum: $drinkTypeEnum, name: $name}';
   }
 }

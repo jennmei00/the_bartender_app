@@ -4,8 +4,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:localization/localization.dart';
 import 'package:the_bartender_app/res/style/app_theme.dart';
 
-import 'package:the_bartender_app/utils/enums.dart';
+import 'package:the_bartender_app/utils/route_util.dart';
 import 'package:the_bartender_app/utils/routes/router.gr.dart';
+import 'package:the_bartender_app/utils/string_util.dart';
 
 class StyledDrawer extends StatelessWidget {
   final DrawerView drawerView;
@@ -19,10 +20,10 @@ class StyledDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Drawer(
       child: SafeArea(
-        child: GestureDetector(
-          onTap: () => onTapPressed(context, DrawerView.home),
-          child: Column(children: [
-            Padding(
+        child: Column(children: [
+          GestureDetector(
+            onTap: () => onTapPressed(context, const HomeViewRoute()),
+            child: Padding(
               padding: const EdgeInsets.all(10.0),
               child: Column(
                 children: [
@@ -37,87 +38,41 @@ class StyledDrawer extends StatelessWidget {
                 ],
               ),
             ),
-            Expanded(
-              child: ListView(
-                physics: const BouncingScrollPhysics(),
-                children: [
-                  ListTile(
-                    titleTextStyle: drawerView == DrawerView.recipe
-                        ? AppTheme.themeData.textTheme.headlineMedium!
-                            .copyWith(color: AppTheme.themeData.colorScheme.primary)
-                        : AppTheme.themeData.textTheme.headlineMedium,
-                    contentPadding: const EdgeInsets.only(bottom: 20, left: 50),
-                    title: Text(
-                      'recipes'.i18n().toUpperCase(),
-                    ),
-                    onTap: () => onTapPressed(context, DrawerView.recipe),
-                  ),
-                  ListTile(
-                    titleTextStyle: drawerView == DrawerView.yourCreation
-                        ? AppTheme.themeData.textTheme.headlineMedium!
-                            .copyWith(color: AppTheme.themeData.colorScheme.primary)
-                        : AppTheme.themeData.textTheme.headlineMedium,
-                    contentPadding: const EdgeInsets.only(bottom: 20, left: 50),
-                    title: Text(
-                      'your_creation'.i18n().toUpperCase(),
-                    ),
-                    onTap: () => onTapPressed(context, DrawerView.yourCreation),
-                  ),
-                  ListTile(
-                    titleTextStyle: drawerView == DrawerView.newsAndEvents
-                        ? AppTheme.themeData.textTheme.headlineMedium!
-                            .copyWith(color: AppTheme.themeData.colorScheme.primary)
-                        : AppTheme.themeData.textTheme.headlineMedium,
-                    contentPadding: const EdgeInsets.only(bottom: 20, left: 50),
-                    title: Text(
-                      'news_and_events'.i18n().toUpperCase(),
-                    ),
-                    onTap: () =>
-                        onTapPressed(context, DrawerView.newsAndEvents),
-                  ),
-                  ListTile(
-                    titleTextStyle: drawerView == DrawerView.contact
-                        ? AppTheme.themeData.textTheme.headlineMedium!
-                            .copyWith(color: AppTheme.themeData.colorScheme.primary)
-                        : AppTheme.themeData.textTheme.headlineMedium,
-                    contentPadding: const EdgeInsets.only(bottom: 20, left: 50),
-                    title: Text(
-                      'contact'.i18n().toUpperCase(),
-                    ),
-                    onTap: () => onTapPressed(context, DrawerView.contact),
-                  ),
-                ],
-              ),
-            )
-          ]),
-        ),
+          ),
+          Expanded(
+            child: ListView(
+              physics: const BouncingScrollPhysics(),
+              children: drawerListViewTiles(context),
+            ),
+          )
+        ]),
       ),
     );
   }
 
-  onTapPressed(BuildContext context, DrawerView view) {
+  List<Widget> drawerListViewTiles(BuildContext context) {
+    return drawerViewMap.keys
+        .map(
+          (val) => val == DrawerView.home
+              ? Container()
+              : ListTile(
+                  titleTextStyle: drawerView == val
+                      ? AppTheme.themeData.textTheme.headlineMedium!.copyWith(
+                          color: AppTheme.themeData.colorScheme.primary)
+                      : AppTheme.themeData.textTheme.headlineMedium,
+                  contentPadding: const EdgeInsets.only(bottom: 20, left: 50),
+                  title: Text(
+                    convertToSnakeCase(val.name).i18n().toUpperCase(),
+                  ),
+                  onTap: () => onTapPressed(context, drawerViewMap[val]!),
+                ),
+        )
+        .toList();
+  }
+
+  onTapPressed(BuildContext context, PageRouteInfo<dynamic> route) {
     //*closes the Drawer when navigation to another view
     AutoRouter.of(context).pop();
-
-    switch (view) {
-      case DrawerView.home:
-        AutoRouter.of(context).popAndPush(const HomeViewRoute());
-        break;
-      case DrawerView.recipe:
-        AutoRouter.of(context).popAndPush(RecipeViewRoute());
-        break;
-      case DrawerView.yourCreation:
-        AutoRouter.of(context).popAndPush(YourCreationViewRoute());
-        break;
-      case DrawerView.newsAndEvents:
-        AutoRouter.of(context).popAndPush(const NewsAndEventsViewRoute());
-        break;
-      case DrawerView.contact:
-        AutoRouter.of(context).popAndPush(const ContactViewRoute());
-        break;
-      default:
-        AutoRouter.of(context).popAndPush(const HomeViewRoute());
-        break;
-    }
+    AutoRouter.of(context).popAndPush(route);
   }
 }

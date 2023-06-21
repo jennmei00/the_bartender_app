@@ -1,10 +1,13 @@
 import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:localization/localization.dart';
+import 'package:the_bartender_app/models/recipe.dart';
 import 'package:the_bartender_app/res/style/app_theme.dart';
 
 class InstructionExpansionTile extends StatelessWidget {
-  const InstructionExpansionTile({super.key});
+  final RecipeDetail recipe;
+
+  const InstructionExpansionTile({super.key, required this.recipe});
 
   @override
   Widget build(BuildContext context) {
@@ -39,8 +42,9 @@ class InstructionExpansionTile extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(left: 20.0, right: 20.0),
               child: Text(
-                'Fill the Apple juice in the glass :D And the rest of the ingredients xD',
+                recipe.instruction,
                 softWrap: true,
+                textAlign: TextAlign.justify,
                 style: AppTheme.themeData.textTheme.bodyMedium,
               ),
             ),

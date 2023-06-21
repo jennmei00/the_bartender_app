@@ -1,11 +1,15 @@
+import 'dart:convert';
 import 'dart:typed_data';
+
+import 'package:flutter/foundation.dart';
 
 import 'package:the_bartender_app/models/drink_type.dart';
 import 'package:the_bartender_app/models/ingredient.dart';
 import 'package:the_bartender_app/models/season.dart';
 import 'package:the_bartender_app/models/tool.dart';
+import 'package:the_bartender_app/models/unit.dart';
 
-class Recipe {
+class RecipeDetail {
   String id;
   String name;
   DateTime creationDate;
@@ -15,13 +19,13 @@ class Recipe {
   String instruction;
   String descriiption;
   int rating;
-  Uint8List? image;
+  //TODOUint8List? image;
   Season season;
   DrinkType drinkType;
   List<Tool> tools;
   List<Ingredient> ingredients;
 
-  Recipe({
+  RecipeDetail({
     required this.id,
     required this.name,
     required this.creationDate,
@@ -31,14 +35,14 @@ class Recipe {
     required this.instruction,
     required this.descriiption,
     required this.rating,
-    this.image,
+    //TODOthis.image,
     required this.season,
     required this.drinkType,
     required this.tools,
     required this.ingredients,
   });
 
-  Recipe copyWith({
+  RecipeDetail copyWith({
     String? id,
     String? name,
     DateTime? creationDate,
@@ -54,7 +58,7 @@ class Recipe {
     List<Tool>? tools,
     List<Ingredient>? ingredients,
   }) {
-    return Recipe(
+    return RecipeDetail(
       id: id ?? this.id,
       name: name ?? this.name,
       creationDate: creationDate ?? this.creationDate,
@@ -64,11 +68,133 @@ class Recipe {
       instruction: instruction ?? this.instruction,
       descriiption: descriiption ?? this.descriiption,
       rating: rating ?? this.rating,
-      image: image ?? this.image,
+      //TODOimage: image ?? this.image,
       season: season ?? this.season,
       drinkType: drinkType ?? this.drinkType,
       tools: tools ?? this.tools,
       ingredients: ingredients ?? this.ingredients,
     );
   }
+
+  Map<String, dynamic> toMap() {
+    final result = <String, dynamic>{};
+
+    result.addAll({'recipe_id': id});
+    result.addAll({'name': name});
+    result.addAll({'creationDate': creationDate.millisecondsSinceEpoch});
+    if (editDate != null) {
+      result.addAll({'editDate': editDate!.millisecondsSinceEpoch});
+    }
+    result.addAll({'prepTimeMinutes': prepTimeMinutes});
+    result.addAll({'alcoholic': alcoholic});
+    result.addAll({'instruction': instruction});
+    result.addAll({'descriiption': descriiption});
+    result.addAll({'rating': rating});
+    //TODOresult.addAll({'image': image!.toMap()});
+
+    result.addAll({'season': season.toMap()});
+    result.addAll({'drinkType': drinkType.toMap()});
+    result.addAll({'tools': tools.map((x) => x.toMap()).toList()});
+    result.addAll({'ingredients': ingredients.map((x) => x.toMap()).toList()});
+
+    return result;
+  }
+
+  factory RecipeDetail.fromMap(Map<String, dynamic> map) {
+    return RecipeDetail(
+      id: map['recipe_id'] ?? '',
+      name: map['name'] ?? '',
+      creationDate: DateTime.parse(map['creation_date']),
+      editDate:
+          map['edit_date'] != null ? DateTime.parse(map['edit_date']) : null,
+      prepTimeMinutes: map['prep_time_minutes']?.toInt() ?? 0,
+      alcoholic: map['alcoholic'] ?? false,
+      instruction: map['instruction'] ?? '',
+      descriiption: map['description'] ?? '',
+      rating: map['rating']?.toInt() ?? 0,
+      //TODOimage:
+      //TODOmap['image'], // != null ? Uint8List.fromMap(map['image']) : null,
+      season: Season.fromMap(map['season']),
+      drinkType: DrinkType.fromMap(map['drink_type']),
+      tools: map['tools'] == null
+          ? [Tool(id: '', name: '')]
+          : List<Tool>.from(map['tools']?.map((x) => Tool.fromMap(x))),
+      ingredients: map['tools'] == null
+          ? [
+              Ingredient(
+                  id: '', name: '', amount: 0, unit: Unit(id: '', name: ''))
+            ]
+          : List<Ingredient>.from(
+              map['ingredients']?.map((x) => Ingredient.fromMap(x))),
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory RecipeDetail.fromJson(String source) =>
+      RecipeDetail.fromMap(json.decode(source));
+}
+
+class Recipe {
+  String id;
+  String name;
+  double rating;
+  bool alcoholic;
+  String userName;
+  Season season;
+  //TODOImage
+  Recipe({
+    required this.id,
+    required this.name,
+    required this.rating,
+    required this.alcoholic,
+    required this.userName,
+    required this.season,
+  });
+
+  Recipe copyWith({
+    String? id,
+    String? name,
+    double? rating,
+    bool? alcoholic,
+    String? userName,
+    Season? season,
+  }) {
+    return Recipe(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      rating: rating ?? this.rating,
+      alcoholic: alcoholic ?? this.alcoholic,
+      userName: userName ?? this.userName,
+      season: season ?? this.season,
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    final result = <String, dynamic>{};
+
+    result.addAll({'recipe_id': id});
+    result.addAll({'name': name});
+    result.addAll({'rating': rating});
+    result.addAll({'alcoholic': alcoholic});
+    // result.addAll({'userName': userName});
+    result.addAll({'season': season.toMap()});
+
+    return result;
+  }
+
+  factory Recipe.fromMap(Map<String, dynamic> map) {
+    return Recipe(
+      id: map['recipe_id'] ?? '',
+      name: map['name'] ?? '',
+      rating: map['rating']?.toDouble() ?? 0.0,
+      alcoholic: map['alcoholic'] ?? false,
+      userName: 'NIKmigg',
+      season: Season.fromMap(map['season']),
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory Recipe.fromJson(String source) => Recipe.fromMap(json.decode(source));
 }

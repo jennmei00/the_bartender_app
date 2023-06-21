@@ -1,7 +1,7 @@
 import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:the_bartender_app/res/style/app_theme.dart';
-import 'package:the_bartender_app/utils/enums.dart';
+import 'package:the_bartender_app/utils/route_util.dart';
 import 'package:the_bartender_app/widgets/styled_drawer.dart';
 
 class ContactView extends StatelessWidget {

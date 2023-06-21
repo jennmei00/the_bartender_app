@@ -1,10 +1,13 @@
 import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:localization/localization.dart';
+import 'package:the_bartender_app/models/recipe.dart';
 import 'package:the_bartender_app/res/style/app_theme.dart';
 
 class IngredientExpansionTile extends StatelessWidget {
-  const IngredientExpansionTile({super.key});
+  final RecipeDetail recipe;
+
+  const IngredientExpansionTile({super.key, required this.recipe});
 
   @override
   Widget build(BuildContext context) {
@@ -53,70 +56,27 @@ class IngredientExpansionTile extends StatelessWidget {
                       .copyWith(fontStyle: FontStyle.italic),
                 ),
               ),
-            ]),
-            TableRow(children: [
+            ]), ...recipe.ingredients.map((e) => TableRow(children: [
               const Icon(CommunityMaterialIcons.circle_small),
               Text(
-                'Apple juice',
+                e.name,
                 style: AppTheme.themeData.textTheme.bodyMedium,
               ),
               Padding(
                 padding: const EdgeInsets.only(left: 40.0),
                 child: Text(
-                  '500',
+                  '${e.amount}',
                   style: AppTheme.themeData.textTheme.bodyMedium,
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.only(left: 40.0),
                 child: Text(
-                  'ml',
+                  e.unit.name.i18n(), //TODOi18n add units
                   style: AppTheme.themeData.textTheme.bodyMedium,
                 ),
               ),
-            ]),
-            TableRow(children: [
-              const Icon(CommunityMaterialIcons.circle_small),
-              Text(
-                'Orange',
-                style: AppTheme.themeData.textTheme.bodyMedium,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 40.0),
-                child: Text(
-                  '1',
-                  style: AppTheme.themeData.textTheme.bodyMedium,
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 40.0),
-                child: Text(
-                  'pc',
-                  style: AppTheme.themeData.textTheme.bodyMedium,
-                ),
-              ),
-            ]),
-            TableRow(children: [
-              const Icon(CommunityMaterialIcons.circle_small),
-              Text(
-                'Water',
-                style: AppTheme.themeData.textTheme.bodyMedium,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 40.0),
-                child: Text(
-                  '3',
-                  style: AppTheme.themeData.textTheme.bodyMedium,
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 40.0),
-                child: Text(
-                  'cl',
-                  style: AppTheme.themeData.textTheme.bodyMedium,
-                ),
-              ),
-            ])
+            ]),).toList(),
           ],
         )
       ],
