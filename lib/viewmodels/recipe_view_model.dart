@@ -32,14 +32,12 @@ class RecipeViewModel with ChangeNotifier {
       _apiResponse = ApiResponse.completed(recipeList);
     } catch (e) {
       _apiResponse = ApiResponse.error(e.toString());
-      print(e);
     }
     notifyListeners();
   }
 
   void setSelectedRecipe(List<Recipe>? recipeList) {
     _recipeList = recipe;
-    // notifyListeners();
   }
 
   void setSearchText(String searchText) {

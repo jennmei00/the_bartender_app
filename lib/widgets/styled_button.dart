@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class StyledButton extends StatelessWidget {
   final String title;
-  final Function() onButtonPressed;
+  final Function()? onButtonPressed;
 
   const StyledButton({Key? key, required this.title, required this.onButtonPressed}) : super(key: key);
 

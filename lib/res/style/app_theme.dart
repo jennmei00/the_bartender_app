@@ -8,7 +8,7 @@ class AppTheme {
 
   static final Color _primaryColor = HexColor('BC9635');
   static final Color secondaryColor = HexColor('F0DBA4');
-  static final Color _errorColor = Colors.red;//HexColor('F0DBA4');
+  static const Color _errorColor =  Colors.red; //HexColor('F0DBA4');
   static final Color _elevatedButtonBackgroundColor = HexColor('484040');
   static final Color _drawerBackgroundcolor = HexColor('32241F');
 
@@ -125,5 +125,6 @@ class AppTheme {
       endIndent: 20,
       indent: 20,
     ),
+    cardColor: secondaryColor.withOpacity(0.8),
   );
 }

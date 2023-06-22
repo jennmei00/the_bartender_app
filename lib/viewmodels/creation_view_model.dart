@@ -27,7 +27,6 @@ class CreationViewModel with ChangeNotifier {
       _apiResponse = ApiResponse.completed(seasons);
     } catch (e) {
       _apiResponse = ApiResponse.error(e.toString());
-      print(e);
     }
     notifyListeners();
   }

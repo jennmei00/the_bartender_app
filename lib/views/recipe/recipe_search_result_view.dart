@@ -13,6 +13,7 @@ import 'package:the_bartender_app/utils/route_util.dart';
 import 'package:the_bartender_app/viewmodels/recipe_view_model.dart';
 import 'package:the_bartender_app/widgets/cocktail_card.dart';
 import 'package:the_bartender_app/widgets/styled_drawer.dart';
+import 'package:the_bartender_app/widgets/styled_error.dart';
 
 class RecipeSearchResultView extends StatelessWidget {
   final TextEditingController searchTextController = TextEditingController();
@@ -92,8 +93,9 @@ class RecipeSearchResultView extends StatelessWidget {
     ApiResponse apiResponse = value.response;
 
     switch (apiResponse.status) {
-      case Status.initial || Status.loading:
-        return  const SliverToBoxAdapter(child: Center(child: CircularProgressIndicator.adaptive()));
+      case Status.loading:
+        return const SliverToBoxAdapter(
+            child: Center(child: CircularProgressIndicator.adaptive()));
       case Status.completed:
         List<Recipe> recipeList = apiResponse.data as List<Recipe>;
         return SliverGrid.count(
@@ -103,9 +105,11 @@ class RecipeSearchResultView extends StatelessWidget {
           childAspectRatio: (180 / 250),
           children: recipeList.map((val) => CocktailCard(recipe: val)).toList(),
         );
+      case Status.initial:
       case Status.error:
-        return SliverToBoxAdapter(
-            child: ErrorWidget(Exception())); //TODOErrorWidget and Excpetion
+        return SliverToBoxAdapter(child: StyledError(message: '${apiResponse.message}'));
     }
   }
 }
+
+

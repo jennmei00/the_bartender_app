@@ -11,6 +11,4 @@ class SeasonRepository {
     List<Season> seasonList = jsonData.map((json) => Season.fromMap(json)).toList();
     return seasonList;
   }
-
-  
 }

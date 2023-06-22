@@ -27,7 +27,6 @@ class RecipeDetailViewModel with ChangeNotifier {
       _apiResponse = ApiResponse.completed(recipe);
     } catch (e) {
       _apiResponse = ApiResponse.error(e.toString());
-      print(e);
     }
     notifyListeners();
   }

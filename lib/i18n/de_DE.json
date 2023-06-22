@@ -29,5 +29,11 @@
     "create": "Erstellen",
     "your_creation_text": "& Wähle deinen Typ!",
     "name": "Name",
-    "mandatory_field": "Pflichtfeld"
+    "mandatory_field": "Pflichtfeld",
+    "no_internet_connection": "Keine Internetverbindung",
+    "fetch_data_exception_text": "Bei der Kommunikation mit dem Server ist ein Fehler mit Statuscode aufgetreten:",
+    "error_during_communication": "Fehler während der Kommunikation",
+    "invalid_request": "Ungültige Anfrage",
+    "unauthorized_request": "Unbefugte Anfrage",
+    "invalid_input": "Ungültige Eingabe"
 }

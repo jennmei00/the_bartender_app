@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:localization/localization.dart';
+import 'package:the_bartender_app/data/api/api_exception.dart';
 import 'package:the_bartender_app/data/services/base_service.dart';
 import 'package:http/http.dart' as http;
 
@@ -12,27 +14,25 @@ class RecipeService extends BaseService {
       final response = await http.get(Uri.parse(baseUrl + url));
       responseJson = returnResponse(response);
     } on SocketException {
-      //TODOadd custom exceptions
-      print('SOCKETEXCPETION');
-      throw Exception();
+      throw FetchDataException('no_internet_connection'.i18n());
     }
     return responseJson;
   }
 
   dynamic returnResponse(http.Response response) {
     switch (response.statusCode) {
-      //TODOadd custom exceptions
       case 200:
         dynamic responseJson = jsonDecode(response.body);
         return responseJson;
       case 400:
-        throw Exception();
+        throw BadRequestException(response.body.toString());
       case 401:
       case 403:
-        throw Exception();
+        throw UnauthorizedException(response.body.toString());
       case 500:
       default:
-        throw Exception();
+        throw FetchDataException(
+            '${'fetch_data_exception_text'.i18n()} ${response.statusCode}');
     }
   }
 }

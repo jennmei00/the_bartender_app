@@ -16,6 +16,7 @@ import 'package:the_bartender_app/widgets/recipeCreate/recipeCreateEdit/ingredie
 import 'package:the_bartender_app/widgets/recipeCreate/recipeCreateEdit/instruction_edit_expansion_tile.dart';
 import 'package:the_bartender_app/widgets/styled_button.dart';
 import 'package:the_bartender_app/widgets/styled_drawer.dart';
+import 'package:the_bartender_app/widgets/styled_error.dart';
 
 class YourCreationDetailView extends StatefulWidget {
   final DrinkTypeEnum drinkTypeEnum;
@@ -72,11 +73,17 @@ class _YourCreationDetailViewState extends State<YourCreationDetailView> {
                       }),
                       actions: [
                         IconButton(
-                          onPressed: onSavePressed(context),
+                          onPressed: Provider.of<CreationViewModel>(context)
+                                      .response
+                                      .status !=
+                                  Status.completed
+                              ? null
+                              : onSavePressed(context),
                           icon: const Icon(
                             CommunityMaterialIcons.content_save,
-                            color: Colors.white,
                           ),
+                          color: Colors.white,
+                          disabledColor: Colors.grey,
                         )
                       ],
                     ),
@@ -140,7 +147,11 @@ class _YourCreationDetailViewState extends State<YourCreationDetailView> {
                 padding: const EdgeInsets.only(bottom: 12),
                 child: StyledButton(
                   title: 'save'.i18n(),
-                  onButtonPressed: () => onSavePressed(context),
+                  onButtonPressed:
+                      Provider.of<CreationViewModel>(context).response.status !=
+                              Status.completed
+                          ? null
+                          : () => onSavePressed(context),
                 ),
               ),
             ],
@@ -184,7 +195,7 @@ class _YourCreationDetailViewState extends State<YourCreationDetailView> {
         );
 
       case Status.error:
-        return ErrorWidget(Exception());
+        return StyledError(message: '${value.response.message}');
     }
   }
 }

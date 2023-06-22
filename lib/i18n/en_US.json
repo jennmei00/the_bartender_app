@@ -29,5 +29,11 @@
     "create": "Create",
     "your_creation_text": "& Choose Your Type!",
     "name": "Name",
-    "mandatory_field": "Mandatory Field"
+    "mandatory_field": "Mandatory Field",
+    "no_internet_connection": "No Internet Connection",
+    "fetch_data_exception_text": "Error occured while communication with server with status code:",
+    "error_during_communication": "Error During Communication",
+    "invalid_request": "Invalid Request",
+    "unauthorized_request": "Unauthorized Request",
+    "invalid_input": "Invalid Input"
 }
