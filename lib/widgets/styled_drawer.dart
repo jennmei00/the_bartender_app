@@ -83,10 +83,10 @@ class StyledDrawer extends StatelessWidget {
           Provider.of<DrinkTypeViewModel>(context, listen: false);
 
       if (seasonVM.seasonList == null) {
-        seasonVM.fetchSeasonData();
+        seasonVM.fetchData();
       }
       if (drinkTypeVM.drinkTypeList == null) {
-        drinkTypeVM.fetchSeasonData();
+        drinkTypeVM.fetchData();
       }
     }
   }

@@ -5,11 +5,13 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:localization/localization.dart';
 import 'package:provider/provider.dart';
 import 'package:the_bartender_app/models/season.dart';
+import 'package:the_bartender_app/models/tool.dart';
 import 'package:the_bartender_app/res/style/app_theme.dart';
 import 'package:the_bartender_app/utils/enum.dart';
 import 'package:the_bartender_app/utils/route_util.dart';
 import 'package:the_bartender_app/utils/routes/router.gr.dart';
 import 'package:the_bartender_app/viewmodels/season_view_model.dart';
+import 'package:the_bartender_app/viewmodels/tool_view_model.dart';
 import 'package:the_bartender_app/widgets/recipeCreate/animated_carousel.dart';
 import 'package:the_bartender_app/widgets/styled_button.dart';
 import 'package:the_bartender_app/widgets/styled_drawer.dart';
@@ -33,13 +35,18 @@ class _YourCreationViewState extends State<YourCreationView> {
   void onCreatePressed(BuildContext context) {
     if (formKey.currentState!.validate()) {
       DrinkTypeEnum drinkTypeEnum =
-          DrinkTypeEnum.values[_carouselIndex];
+          DrinkTypeEnum.values[_carouselIndex]; //TODOChange enum to data of database
       String name = nameController.text;
 
       List<Season>? seasonList =
           Provider.of<SeasonViewModel>(context, listen: false).seasonList;
       if (seasonList == null || seasonList.isEmpty) {
-        Provider.of<SeasonViewModel>(context, listen: false).fetchSeasonData();
+        Provider.of<SeasonViewModel>(context, listen: false).fetchData();
+      }
+
+      List<Tool>? toolList = Provider.of<ToolViewModel>(context, listen: false).toolList;
+      if(toolList == null || toolList.isEmpty) {
+        Provider.of<ToolViewModel>(context, listen: false).fetchData();
       }
       AutoRouter.of(context).push(YourCreationDetailViewRoute(
           drinkTypeEnum: drinkTypeEnum, name: name));

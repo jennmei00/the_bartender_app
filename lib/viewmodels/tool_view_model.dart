@@ -17,12 +17,12 @@ class ToolViewModel with ChangeNotifier {
   }
 
   //* Call the tool service and gets the data of requested tool data
-  Future<void> fetchSeasonData() async {
+  Future<void> fetchData() async {
     _apiResponse = ApiResponse.loading('Fetching recipe data');
     notifyListeners();
     try {
       List<Tool> tools =
-          await ToolRepository().fetchSeasonData();
+          await ToolRepository().fetchData();
       setSelectedTool(tools);
       _apiResponse = ApiResponse.completed(tools);
     } catch (e) {

@@ -17,12 +17,12 @@ class SeasonViewModel with ChangeNotifier {
   }
 
   //* Call the recipe service and gets the data of requested recipe data
-  Future<void> fetchSeasonData() async {
+  Future<void> fetchData() async {
     _apiResponse = ApiResponse.loading('Fetching recipe data');
     notifyListeners();
     try {
       List<Season> seasons =
-          await SeasonRepository().fetchSeasonData();
+          await SeasonRepository().fetchData();
       setSelctedSeason(seasons);
       _apiResponse = ApiResponse.completed(seasons);
     } catch (e) {

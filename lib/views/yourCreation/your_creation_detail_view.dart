@@ -11,6 +11,7 @@ import 'package:the_bartender_app/utils/enum.dart';
 import 'package:the_bartender_app/utils/route_util.dart';
 import 'package:the_bartender_app/utils/string_util.dart';
 import 'package:the_bartender_app/viewmodels/season_view_model.dart';
+import 'package:the_bartender_app/viewmodels/tool_view_model.dart';
 import 'package:the_bartender_app/widgets/recipeCreate/recipeCreateEdit/information_edit_expansion_tile.dart';
 import 'package:the_bartender_app/widgets/recipeCreate/recipeCreateEdit/ingredient_edit_expansion_tile.dart';
 import 'package:the_bartender_app/widgets/recipeCreate/recipeCreateEdit/instruction_edit_expansion_tile.dart';
@@ -130,9 +131,9 @@ class _YourCreationDetailViewState extends State<YourCreationDetailView> {
                               textAlign: TextAlign.center,
                             ),
                             const SizedBox(height: 20),
-                            Consumer<SeasonViewModel>(
-                                builder: (context, value, child) =>
-                                    getCreationEditWidgets(value)),
+                            Consumer2<SeasonViewModel, ToolViewModel>(
+                                builder: (context, seasonVM, toolVM, child) =>
+                                    getCreationEditWidgets(seasonVM, toolVM)),
                             const SizedBox(height: 30),
                           ],
                         ),
@@ -147,11 +148,14 @@ class _YourCreationDetailViewState extends State<YourCreationDetailView> {
                 padding: const EdgeInsets.only(bottom: 12),
                 child: StyledButton(
                   title: 'save'.i18n(),
-                  onButtonPressed:
-                      Provider.of<SeasonViewModel>(context).response.status !=
+                  onButtonPressed: Provider.of<SeasonViewModel>(context)
+                                  .response
+                                  .status !=
+                              Status.completed ||
+                          Provider.of<ToolViewModel>(context).response.status !=
                               Status.completed
-                          ? null
-                          : () => onSavePressed(context),
+                      ? null
+                      : () => onSavePressed(context),
                 ),
               ),
             ],
@@ -161,41 +165,42 @@ class _YourCreationDetailViewState extends State<YourCreationDetailView> {
     );
   }
 
-  Widget getCreationEditWidgets(SeasonViewModel value) {
-    if (value.response.status == Status.initial ||
-        value.response.status == Status.loading) {}
-    switch (value.response.status) {
-      case Status.initial || Status.loading:
-        return const Center(
-          child: CircularProgressIndicator.adaptive(),
+  Widget getCreationEditWidgets(
+      SeasonViewModel seasonVM, ToolViewModel toolVM) {
+    if (seasonVM.response.status == Status.error ||
+        toolVM.response.status == Status.error) {
+      return StyledError(
+          message:
+              '${seasonVM.response.status == Status.error ? seasonVM.response.message : toolVM.response.message}');
+    } else if (seasonVM.response.status == Status.completed &&
+        toolVM.response.status == Status.completed) {
+      return Column(
+          children: [
+            const InformationEditExpansionTile(),
+            const Divider(),
+            const IngredientEditExpansionTile(),
+            const Divider(),
+            const InstructionEditExpansionTile(),
+            RatingStars(
+              starBuilder: (index, color) {
+                return color ==
+                        Colors
+                            .transparent //TODOStar reting (recipe.rating < index)
+                    ? const Icon(CommunityMaterialIcons.star_outline)
+                    : const Icon(CommunityMaterialIcons.star);
+              },
+              value: starRatingValue,
+              starColor: Colors.white,
+              starOffColor: Colors.transparent,
+              valueLabelVisibility: false,
+              starSize: 25,
+              onValueChanged: (value) =>
+                  setState(() => starRatingValue = value),
+            ),
+          ],
         );
-      case Status.completed:
-    return Column(
-      children: [
-        const InformationEditExpansionTile(),
-        const Divider(),
-        const IngredientEditExpansionTile(),
-        const Divider(),
-        const InstructionEditExpansionTile(),
-        RatingStars(
-          starBuilder: (index, color) {
-            return color ==
-                    Colors.transparent //TODOStar reting (recipe.rating < index)
-                ? const Icon(CommunityMaterialIcons.star_outline)
-                : const Icon(CommunityMaterialIcons.star);
-          },
-          value: starRatingValue,
-          starColor: Colors.white,
-          starOffColor: Colors.transparent,
-          valueLabelVisibility: false,
-          starSize: 25,
-          onValueChanged: (value) => setState(() => starRatingValue = value),
-        ),
-      ],
-    );
-
-    case Status.error:
-      return StyledError(message: '${value.response.message}');
+    } else {
+      return const Center(child: CircularProgressIndicator.adaptive());
     }
   }
 }

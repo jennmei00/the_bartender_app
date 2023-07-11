@@ -17,12 +17,12 @@ class DrinkTypeViewModel with ChangeNotifier {
   }
 
   //* Call the drinkType service and gets the data of requested drinkType data
-  Future<void> fetchSeasonData() async {
+  Future<void> fetchData() async {
     _apiResponse = ApiResponse.loading('Fetching recipe data');
     notifyListeners();
     try {
       List<DrinkType> drinkTypes =
-          await DrinkTypeRepository().fetchSeasonData();
+          await DrinkTypeRepository().fetchData();
       setSelectedDrinkType(drinkTypes);
       _apiResponse = ApiResponse.completed(drinkTypes);
     } catch (e) {

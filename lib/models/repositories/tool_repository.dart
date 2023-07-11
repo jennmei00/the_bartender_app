@@ -5,7 +5,7 @@ import 'package:the_bartender_app/models/tool.dart';
 class ToolRepository {
   final BaseService _tooleService = GeneralService();
 
-  Future<List<Tool>> fetchSeasonData() async {
+  Future<List<Tool>> fetchData() async {
     dynamic response = await _tooleService.getResponse('tool');
     final List<dynamic> jsonData = response;
     List<Tool> toolList = jsonData.map((json) => Tool.fromMap(json)).toList();

@@ -9,6 +9,7 @@ class StyledTextfield extends StatelessWidget {
   final double? width;
   final TextInputType? textInputType;
   final Function? validator;
+  final bool enabled;
 
   const StyledTextfield({
     super.key,
@@ -19,6 +20,7 @@ class StyledTextfield extends StatelessWidget {
     this.width,
     this.textInputType,
     this.validator,
+    this.enabled = true,
   });
 
   final OutlineInputBorder _outlineInputBorder = const OutlineInputBorder(
@@ -32,6 +34,8 @@ class StyledTextfield extends StatelessWidget {
       height: textInputType == TextInputType.multiline ? null : height,
       width: width,
       child: TextFormField(
+        
+        enabled: enabled,
         validator: validator == null ? null : (value) => validator!(value),
         style: AppTheme.themeData.textTheme.bodyMedium,
         controller: controller,
@@ -39,9 +43,11 @@ class StyledTextfield extends StatelessWidget {
           contentPadding:
               const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
           enabledBorder: _outlineInputBorder,
+          disabledBorder: _outlineInputBorder,
           border: _outlineInputBorder,
           errorBorder: _outlineInputBorder.copyWith(
-            borderSide: BorderSide(width: 3, color: AppTheme.themeData.colorScheme.error),
+            borderSide: BorderSide(
+                width: 3, color: AppTheme.themeData.colorScheme.error),
           ),
           filled: true,
           fillColor: AppTheme.styledTextFieldColor.withOpacity(0.6),
