@@ -8,8 +8,9 @@ class AppTheme {
 
   static final Color _primaryColor = HexColor('BC9635');
   static final Color secondaryColor = HexColor('F0DBA4');
-  static const Color _errorColor =  Colors.red; //HexColor('F0DBA4');
+  static const Color _errorColor = Colors.red; //HexColor('F0DBA4');
   static final Color _elevatedButtonBackgroundColor = HexColor('484040');
+  static final Color normalCardBackgroundcolor = HexColor('484040').withOpacity(0.4);
   static final Color _drawerBackgroundcolor = HexColor('32241F');
 
   static const AssetImage backgroundImage =

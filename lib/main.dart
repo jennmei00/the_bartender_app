@@ -4,9 +4,11 @@ import 'package:localization/localization.dart';
 import 'package:provider/provider.dart';
 import 'package:the_bartender_app/res/style/app_theme.dart';
 import 'package:the_bartender_app/utils/routes/router.gr.dart';
-import 'package:the_bartender_app/viewmodels/creation_view_model.dart';
+import 'package:the_bartender_app/viewmodels/drink_type_view_model.dart';
+import 'package:the_bartender_app/viewmodels/season_view_model.dart';
 import 'package:the_bartender_app/viewmodels/recipe_detail_view_model.dart';
 import 'package:the_bartender_app/viewmodels/recipe_view_model.dart';
+import 'package:the_bartender_app/viewmodels/tool_view_model.dart';
 
 void main() {
   runApp(MyApp());
@@ -19,11 +21,19 @@ class MyApp extends StatelessWidget {
   //* This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      precacheImage(
+          AppTheme.backgroundImage, context); //TODOLoad Image before starting
+      precacheImage(AppTheme.woodBackgroundImage, context);
+    });
+
     return MultiProvider(
       providers: [
         ChangeNotifierProvider.value(value: RecipeViewModel()),
         ChangeNotifierProvider.value(value: RecipeDetailViewModel()),
-        ChangeNotifierProvider.value(value: CreationViewModel()),
+        ChangeNotifierProvider.value(value: SeasonViewModel()),
+        ChangeNotifierProvider.value(value: DrinkTypeViewModel()),
+        ChangeNotifierProvider.value(value: ToolViewModel ()),
       ],
       child: MaterialApp.router(
         title: 'The Bartender',

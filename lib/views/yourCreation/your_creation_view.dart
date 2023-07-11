@@ -9,28 +9,37 @@ import 'package:the_bartender_app/res/style/app_theme.dart';
 import 'package:the_bartender_app/utils/enum.dart';
 import 'package:the_bartender_app/utils/route_util.dart';
 import 'package:the_bartender_app/utils/routes/router.gr.dart';
-import 'package:the_bartender_app/viewmodels/creation_view_model.dart';
+import 'package:the_bartender_app/viewmodels/season_view_model.dart';
 import 'package:the_bartender_app/widgets/recipeCreate/animated_carousel.dart';
 import 'package:the_bartender_app/widgets/styled_button.dart';
 import 'package:the_bartender_app/widgets/styled_drawer.dart';
 import 'package:the_bartender_app/widgets/styled_textfield.dart';
 
-class YourCreationView extends StatelessWidget {
+class YourCreationView extends StatefulWidget {
+
+  const YourCreationView({super.key});
+
+  @override
+  State<YourCreationView> createState() => _YourCreationViewState();
+}
+
+class _YourCreationViewState extends State<YourCreationView> {
   final TextEditingController nameController = TextEditingController();
+
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
-  YourCreationView({super.key});
+   int _carouselIndex = (DrinkTypeEnum.values.length / 2).floor();
 
   void onCreatePressed(BuildContext context) {
     if (formKey.currentState!.validate()) {
       DrinkTypeEnum drinkTypeEnum =
-          DrinkTypeEnum.values[0]; //TODOGet drinktypeEnum
+          DrinkTypeEnum.values[_carouselIndex];
       String name = nameController.text;
 
       List<Season>? seasonList =
-          Provider.of<CreationViewModel>(context, listen: false).seasonList;
+          Provider.of<SeasonViewModel>(context, listen: false).seasonList;
       if (seasonList == null || seasonList.isEmpty) {
-        Provider.of<CreationViewModel>(context, listen: false).fetchSeasonData();
+        Provider.of<SeasonViewModel>(context, listen: false).fetchSeasonData();
       }
       AutoRouter.of(context).push(YourCreationDetailViewRoute(
           drinkTypeEnum: drinkTypeEnum, name: name));
@@ -40,7 +49,7 @@ class YourCreationView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(
+      decoration:  const BoxDecoration(
           image: DecorationImage(
         image: AppTheme.backgroundImage,
         fit: BoxFit.cover,
@@ -91,7 +100,11 @@ class YourCreationView extends StatelessWidget {
                               ),
                             ),
                             const SizedBox(height: 10),
-                            const AnimatedCarousel(),
+                            AnimatedCarousel(
+                              onCarouselIndexChanged: (value) =>
+                                _carouselIndex = value,
+                              
+                            ),
                             const SizedBox(height: 20),
                             Container(
                               width: double.infinity,

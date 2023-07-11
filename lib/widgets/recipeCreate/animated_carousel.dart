@@ -7,7 +7,9 @@ import 'package:the_bartender_app/utils/enum.dart';
 import 'package:the_bartender_app/utils/string_util.dart';
 
 class AnimatedCarousel extends StatefulWidget {
-  const AnimatedCarousel({super.key});
+  final Function onCarouselIndexChanged;
+  const AnimatedCarousel({super.key, required this.onCarouselIndexChanged});
+  
 
   @override
   State<AnimatedCarousel> createState() => _AnimatedCarouselState();
@@ -45,6 +47,7 @@ class _AnimatedCarouselState extends State<AnimatedCarousel> {
               viewportFraction: 0.3,
               scale: 0.5,
               onIndexChanged: (value) {
+                 widget.onCarouselIndexChanged(value);
                 setState(() => _carouselIndex = value);
               },
               loop: false,

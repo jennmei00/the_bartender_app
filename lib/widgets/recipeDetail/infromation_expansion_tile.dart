@@ -9,8 +9,6 @@ class InformationExpansionTile extends StatelessWidget {
   final RecipeDetail recipe;
   const InformationExpansionTile({super.key, required this.recipe});
 
-  final bool radioAlcoholicGroupValue = true;
-
   @override
   Widget build(BuildContext context) {
     return ExpansionTile(
@@ -29,13 +27,12 @@ class InformationExpansionTile extends StatelessWidget {
       iconColor: AppTheme.themeData.colorScheme.primary,
       collapsedIconColor: AppTheme.themeData.colorScheme.primary,
       childrenPadding: const EdgeInsets.only(left: 30),
-      expandedAlignment: Alignment.center,
-      expandedCrossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Table(
           defaultColumnWidth: const IntrinsicColumnWidth(),
           children: [
             TableRow(
+
               children: [
                 Text(
                   'prepare_time'.i18n(),
@@ -44,7 +41,7 @@ class InformationExpansionTile extends StatelessWidget {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(left: 40.0),
+                  padding: const EdgeInsets.only(left: 40.0, bottom: 20.0),
                   child: Row(
                     children: [
                       Text(
@@ -61,10 +58,6 @@ class InformationExpansionTile extends StatelessWidget {
                 ),
               ],
             ),
-            const TableRow(children: [
-              SizedBox(height: 20),
-              SizedBox(),
-            ]),
             TableRow(
               children: [
                 Text(
@@ -74,7 +67,7 @@ class InformationExpansionTile extends StatelessWidget {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(left: 40.0),
+                  padding: const EdgeInsets.only(left: 40.0,bottom: 20.0),
                   child: Text(
                     capitalizeFirstLetter(recipe.season.name),
                     style: AppTheme.themeData.textTheme.bodyMedium,
@@ -82,10 +75,6 @@ class InformationExpansionTile extends StatelessWidget {
                 ),
               ],
             ),
-            const TableRow(children: [
-              SizedBox(height: 20),
-              SizedBox(),
-            ]),
             TableRow(
               children: [
                 Text(
@@ -95,7 +84,7 @@ class InformationExpansionTile extends StatelessWidget {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(left: 40.0),
+                  padding: const EdgeInsets.only(left: 40.0,bottom: 20.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: recipe.tools
@@ -110,10 +99,6 @@ class InformationExpansionTile extends StatelessWidget {
                 ),
               ],
             ),
-            const TableRow(children: [
-              SizedBox(height: 20),
-              SizedBox(),
-            ]),
             TableRow(
               children: [
                 Text(
@@ -125,14 +110,14 @@ class InformationExpansionTile extends StatelessWidget {
                 Stack(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(top: 2, left: 25),
+                      padding: const EdgeInsets.only(left: 25),
                       child: Row(
                         children: [
                           Transform.scale(
                             scale: 0.8,
                             child: Radio(
-                              value:  recipe.alcoholic,
-                              groupValue: radioAlcoholicGroupValue,
+                              value: true,
+                              groupValue: recipe.alcoholic,
                               onChanged: (value) {},
                               activeColor: AppTheme.secondaryColor,
                             ),
@@ -145,15 +130,15 @@ class InformationExpansionTile extends StatelessWidget {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(top: 20, left: 25),
+                      padding: const EdgeInsets.only(top: 18, left: 25),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Transform.scale(
                             scale: 0.8,
                             child: Radio(
-                              value: !recipe.alcoholic,
-                              groupValue: radioAlcoholicGroupValue,
+                              value: false,
+                              groupValue: recipe.alcoholic,
                               onChanged: (value) {},
                               activeColor: AppTheme.secondaryColor,
                             ),

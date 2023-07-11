@@ -14,6 +14,7 @@ import 'package:the_bartender_app/widgets/recipeDetail/infromation_expansion_til
 import 'package:the_bartender_app/widgets/recipeDetail/ingredient_expansion_tile.dart';
 import 'package:the_bartender_app/widgets/recipeDetail/instruction_expansion_tile.dart';
 import 'package:the_bartender_app/widgets/styled_drawer.dart';
+import 'package:the_bartender_app/widgets/styled_error.dart';
 
 class RecipeDetailView extends StatelessWidget {
   final TextEditingController searchTextController = TextEditingController();
@@ -60,13 +61,17 @@ class RecipeDetailView extends StatelessWidget {
                       builder: (context, value, child) {
                     switch (value.response.status) {
                       case Status.initial || Status.loading:
-                        return const Center(
-                          child: CircularProgressIndicator.adaptive(),
+                        return const Padding(
+                          padding: EdgeInsets.only(top: 30.0),
+                          child: Center(
+                            child: CircularProgressIndicator.adaptive(),
+                          ),
                         );
                       case Status.completed:
-                        return  RecipeDetailWidget(recipe: value.recipe!);
+                        return RecipeDetailWidget(recipe: value.recipe!);
                       case Status.error:
-                        return ErrorWidget(Exception()); //TODOErrorWidget
+                        return StyledError(
+                            message: '${value.response.message}');
                     }
                   }),
                   childCount: 1,
@@ -83,7 +88,8 @@ class RecipeDetailView extends StatelessWidget {
 class RecipeDetailWidget extends StatelessWidget {
   final RecipeDetail recipe;
   const RecipeDetailWidget({
-    super.key, required this.recipe,
+    super.key,
+    required this.recipe,
   });
 
   @override
@@ -134,7 +140,7 @@ class RecipeDetailWidget extends StatelessWidget {
         InstructionExpansionTile(recipe: recipe),
         RatingStars(
           starBuilder: (index, color) {
-            return color == Colors.transparent
+            return recipe.rating < index
                 ? const Icon(CommunityMaterialIcons.star_outline)
                 : const Icon(CommunityMaterialIcons.star);
           },

@@ -2,11 +2,13 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:localization/localization.dart';
+import 'package:provider/provider.dart';
 import 'package:the_bartender_app/res/style/app_theme.dart';
 
 import 'package:the_bartender_app/utils/route_util.dart';
-import 'package:the_bartender_app/utils/routes/router.gr.dart';
 import 'package:the_bartender_app/utils/string_util.dart';
+import 'package:the_bartender_app/viewmodels/drink_type_view_model.dart';
+import 'package:the_bartender_app/viewmodels/season_view_model.dart';
 
 class StyledDrawer extends StatelessWidget {
   final DrawerView drawerView;
@@ -22,7 +24,7 @@ class StyledDrawer extends StatelessWidget {
       child: SafeArea(
         child: Column(children: [
           GestureDetector(
-            onTap: () => onTapPressed(context, const HomeViewRoute()),
+            onTap: () => onTapPressed(context, DrawerView.home),
             child: Padding(
               padding: const EdgeInsets.all(10.0),
               child: Column(
@@ -64,15 +66,28 @@ class StyledDrawer extends StatelessWidget {
                   title: Text(
                     convertToSnakeCase(val.name).i18n().toUpperCase(),
                   ),
-                  onTap: () => onTapPressed(context, drawerViewMap[val]!),
+                  onTap: () => onTapPressed(context, val),
                 ),
         )
         .toList();
   }
 
-  onTapPressed(BuildContext context, PageRouteInfo<dynamic> route) {
+  onTapPressed(BuildContext context, DrawerView val) {
     //*closes the Drawer when navigation to another view
     AutoRouter.of(context).pop();
-    AutoRouter.of(context).popAndPush(route);
+    AutoRouter.of(context).popAndPush(drawerViewMap[val]!);
+    if (val == DrawerView.recipe) {
+      SeasonViewModel seasonVM =
+          Provider.of<SeasonViewModel>(context, listen: false);
+      DrinkTypeViewModel drinkTypeVM =
+          Provider.of<DrinkTypeViewModel>(context, listen: false);
+
+      if (seasonVM.seasonList == null) {
+        seasonVM.fetchSeasonData();
+      }
+      if (drinkTypeVM.drinkTypeList == null) {
+        drinkTypeVM.fetchSeasonData();
+      }
+    }
   }
 }

@@ -35,5 +35,7 @@
     "error_during_communication": "Fehler während der Kommunikation",
     "invalid_request": "Ungültige Anfrage",
     "unauthorized_request": "Unbefugte Anfrage",
-    "invalid_input": "Ungültige Eingabe"
+    "invalid_input": "Ungültige Eingabe",
+    "filter": "Filter",
+    "drink_type": "Getränkeart"
 }

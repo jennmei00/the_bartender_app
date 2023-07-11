@@ -3,7 +3,7 @@ import 'package:the_bartender_app/data/api/api_response.dart';
 import 'package:the_bartender_app/models/repositories/season_repository.dart';
 import 'package:the_bartender_app/models/season.dart';
 
-class CreationViewModel with ChangeNotifier {
+class SeasonViewModel with ChangeNotifier {
   ApiResponse _apiResponse = ApiResponse.initial('Empty data');
 
   List<Season>? _seasonList;

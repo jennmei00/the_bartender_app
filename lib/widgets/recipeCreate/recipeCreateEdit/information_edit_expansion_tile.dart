@@ -1,13 +1,35 @@
 import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:localization/localization.dart';
+import 'package:provider/provider.dart';
+import 'package:the_bartender_app/models/season.dart';
 import 'package:the_bartender_app/res/style/app_theme.dart';
+import 'package:the_bartender_app/viewmodels/season_view_model.dart';
+import 'package:the_bartender_app/widgets/styled_drop_down.dart';
 import 'package:the_bartender_app/widgets/styled_textfield.dart';
 
-class InformationEditExpansionTile extends StatelessWidget {
+class InformationEditExpansionTile extends StatefulWidget {
+  const InformationEditExpansionTile({super.key});
+
+  @override
+  State<InformationEditExpansionTile> createState() =>
+      _InformationEditExpansionTileState();
+}
+
+class _InformationEditExpansionTileState
+    extends State<InformationEditExpansionTile> {
   final TextEditingController prepTimeController =
       TextEditingController(text: '10');
-  InformationEditExpansionTile({super.key});
+  Season? selectedSeason;
+  List<Season> seasonList = [];
+
+  @override
+  void initState() {
+    super.initState();
+    seasonList =
+        Provider.of<SeasonViewModel>(context, listen: false).seasonList ?? [];
+    selectedSeason = seasonList.first;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +51,7 @@ class InformationEditExpansionTile extends StatelessWidget {
       childrenPadding: const EdgeInsets.only(left: 30),
       expandedAlignment: Alignment.center,
       expandedCrossAxisAlignment: CrossAxisAlignment.start,
+      initiallyExpanded: true, //TODOCLOSE
       children: [
         Table(
           defaultColumnWidth: const IntrinsicColumnWidth(),
@@ -51,7 +74,7 @@ class InformationEditExpansionTile extends StatelessWidget {
                         height: 40,
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(left: 135.0, top: 10),
+                        padding: const EdgeInsets.only(left: 135.0, top: 10, bottom: 20.0),
                         child: Text(
                           'minutes'.i18n().toUpperCase(),
                           style: AppTheme.themeData.textTheme.bodySmall,
@@ -62,10 +85,6 @@ class InformationEditExpansionTile extends StatelessWidget {
                 ),
               ],
             ),
-            const TableRow(children: [
-              SizedBox(height: 20),
-              SizedBox(),
-            ]),
             TableRow(
               children: [
                 Text(
@@ -75,27 +94,19 @@ class InformationEditExpansionTile extends StatelessWidget {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(left: 30.0),
-                  child: Stack(
-                    children: [
-                      StyledTextfield(
-                        controller: TextEditingController(text: 'Summer'),
-                        width: 200,
-                        height: 40,
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.only(left: 165, top: 10),
-                        child: Icon(CommunityMaterialIcons.chevron_down),
-                      )
-                    ],
+                  padding: const EdgeInsets.only(left: 30.0, bottom: 20.0),
+                  child: StyledDropDown(
+                    onSeasonChanged: (value) {
+                      setState(() {
+                        selectedSeason = value;
+                      });
+                    },
+                    season: selectedSeason!,
+                    seasonList: seasonList,
                   ),
                 ),
               ],
-            ),
-            const TableRow(children: [
-              SizedBox(height: 20),
-              SizedBox(),
-            ]),
+            ), 
             TableRow(
               children: [
                 Text(
@@ -107,7 +118,7 @@ class InformationEditExpansionTile extends StatelessWidget {
                 Column(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(left: 30.0),
+                      padding: const EdgeInsets.only(left: 30.0, bottom: 20.0),
                       child: Stack(
                         children: [
                           StyledTextfield(
@@ -131,10 +142,6 @@ class InformationEditExpansionTile extends StatelessWidget {
                 ),
               ],
             ),
-            const TableRow(children: [
-              SizedBox(height: 20),
-              SizedBox(),
-            ]),
             TableRow(
               children: [
                 Text(

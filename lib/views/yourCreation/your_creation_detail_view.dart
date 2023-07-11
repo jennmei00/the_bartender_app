@@ -10,7 +10,7 @@ import 'package:the_bartender_app/res/style/app_theme.dart';
 import 'package:the_bartender_app/utils/enum.dart';
 import 'package:the_bartender_app/utils/route_util.dart';
 import 'package:the_bartender_app/utils/string_util.dart';
-import 'package:the_bartender_app/viewmodels/creation_view_model.dart';
+import 'package:the_bartender_app/viewmodels/season_view_model.dart';
 import 'package:the_bartender_app/widgets/recipeCreate/recipeCreateEdit/information_edit_expansion_tile.dart';
 import 'package:the_bartender_app/widgets/recipeCreate/recipeCreateEdit/ingredient_edit_expansion_tile.dart';
 import 'package:the_bartender_app/widgets/recipeCreate/recipeCreateEdit/instruction_edit_expansion_tile.dart';
@@ -73,7 +73,7 @@ class _YourCreationDetailViewState extends State<YourCreationDetailView> {
                       }),
                       actions: [
                         IconButton(
-                          onPressed: Provider.of<CreationViewModel>(context)
+                          onPressed: Provider.of<SeasonViewModel>(context)
                                       .response
                                       .status !=
                                   Status.completed
@@ -130,7 +130,7 @@ class _YourCreationDetailViewState extends State<YourCreationDetailView> {
                               textAlign: TextAlign.center,
                             ),
                             const SizedBox(height: 20),
-                            Consumer<CreationViewModel>(
+                            Consumer<SeasonViewModel>(
                                 builder: (context, value, child) =>
                                     getCreationEditWidgets(value)),
                             const SizedBox(height: 30),
@@ -148,7 +148,7 @@ class _YourCreationDetailViewState extends State<YourCreationDetailView> {
                 child: StyledButton(
                   title: 'save'.i18n(),
                   onButtonPressed:
-                      Provider.of<CreationViewModel>(context).response.status !=
+                      Provider.of<SeasonViewModel>(context).response.status !=
                               Status.completed
                           ? null
                           : () => onSavePressed(context),
@@ -161,7 +161,7 @@ class _YourCreationDetailViewState extends State<YourCreationDetailView> {
     );
   }
 
-  Widget getCreationEditWidgets(CreationViewModel value) {
+  Widget getCreationEditWidgets(SeasonViewModel value) {
     if (value.response.status == Status.initial ||
         value.response.status == Status.loading) {}
     switch (value.response.status) {
@@ -170,32 +170,32 @@ class _YourCreationDetailViewState extends State<YourCreationDetailView> {
           child: CircularProgressIndicator.adaptive(),
         );
       case Status.completed:
-        return Column(
-          children: [
-            InformationEditExpansionTile(),
-            const Divider(),
-            const IngredientEditExpansionTile(),
-            const Divider(),
-            const InstructionEditExpansionTile(),
-            RatingStars(
-              starBuilder: (index, color) {
-                return color == Colors.transparent
-                    ? const Icon(CommunityMaterialIcons.star_outline)
-                    : const Icon(CommunityMaterialIcons.star);
-              },
-              value: starRatingValue,
-              starColor: Colors.white,
-              starOffColor: Colors.transparent,
-              valueLabelVisibility: false,
-              starSize: 25,
-              onValueChanged: (value) =>
-                  setState(() => starRatingValue = value),
-            ),
-          ],
-        );
+    return Column(
+      children: [
+        const InformationEditExpansionTile(),
+        const Divider(),
+        const IngredientEditExpansionTile(),
+        const Divider(),
+        const InstructionEditExpansionTile(),
+        RatingStars(
+          starBuilder: (index, color) {
+            return color ==
+                    Colors.transparent //TODOStar reting (recipe.rating < index)
+                ? const Icon(CommunityMaterialIcons.star_outline)
+                : const Icon(CommunityMaterialIcons.star);
+          },
+          value: starRatingValue,
+          starColor: Colors.white,
+          starOffColor: Colors.transparent,
+          valueLabelVisibility: false,
+          starSize: 25,
+          onValueChanged: (value) => setState(() => starRatingValue = value),
+        ),
+      ],
+    );
 
-      case Status.error:
-        return StyledError(message: '${value.response.message}');
+    case Status.error:
+      return StyledError(message: '${value.response.message}');
     }
   }
 }

@@ -6,7 +6,7 @@ import 'package:the_bartender_app/data/api/api_exception.dart';
 import 'package:the_bartender_app/data/services/base_service.dart';
 import 'package:http/http.dart' as http;
 
-class RecipeService extends BaseService {
+class GeneralService extends BaseService {
   @override
   Future getResponse(String url) async {
     dynamic responseJson;

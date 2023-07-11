@@ -35,5 +35,7 @@
     "error_during_communication": "Error During Communication",
     "invalid_request": "Invalid Request",
     "unauthorized_request": "Unauthorized Request",
-    "invalid_input": "Invalid Input"
+    "invalid_input": "Invalid Input",
+    "filter": "Filter",
+    "drink_type": "Drink Type"
 }

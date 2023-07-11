@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:the_bartender_app/data/api/api_response.dart';
 import 'package:the_bartender_app/models/recipe.dart';
+import 'package:the_bartender_app/models/recipe_filter.dart';
 import 'package:the_bartender_app/models/repositories/recipe_respository.dart';
 
 class RecipeViewModel with ChangeNotifier {
@@ -22,12 +23,13 @@ class RecipeViewModel with ChangeNotifier {
   }
 
   //* Call the recipe service and gets the data of requested recipe data
-  Future<void> fetchRecipeData(String searchText) async {
+  Future<void> fetchRecipeData(String searchText,
+      {RecipeFilter? recipeFilter}) async {
     _apiResponse = ApiResponse.loading('Fetching recipe data');
     notifyListeners();
     try {
       List<Recipe> recipeList =
-          await RecipeRepository().fetchRecipeList(searchText);
+          await RecipeRepository().fetchRecipeList(searchText, recipeFilter: recipeFilter);
       setSelectedRecipe(recipe);
       _apiResponse = ApiResponse.completed(recipeList);
     } catch (e) {

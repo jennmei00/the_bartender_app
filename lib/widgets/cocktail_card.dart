@@ -49,7 +49,9 @@ class CocktailCard extends StatelessWidget {
                   const SizedBox(height: 20),
                   RatingStars(
                     starBuilder: (index, color) {
-                      return color == Colors.transparent
+                      return 
+                      
+            recipe.rating < index
                           ? const Icon(CommunityMaterialIcons.star_outline)
                           : const Icon(CommunityMaterialIcons.star);
                     },

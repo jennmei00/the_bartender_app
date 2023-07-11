@@ -23,7 +23,7 @@ class RecipeSearchResultView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(
+      decoration:  const BoxDecoration(
           image: DecorationImage(
         image: AppTheme.backgroundImage,
         fit: BoxFit.cover,
