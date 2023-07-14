@@ -76,7 +76,7 @@ class StyledDrawer extends StatelessWidget {
     //*closes the Drawer when navigation to another view
     AutoRouter.of(context).pop();
     AutoRouter.of(context).popAndPush(drawerViewMap[val]!);
-    if (val == DrawerView.recipe) {
+    if (val == DrawerView.recipes) {
       SeasonViewModel seasonVM =
           Provider.of<SeasonViewModel>(context, listen: false);
       DrinkTypeViewModel drinkTypeVM =
@@ -85,6 +85,12 @@ class StyledDrawer extends StatelessWidget {
       if (seasonVM.seasonList == null) {
         seasonVM.fetchData();
       }
+      if (drinkTypeVM.drinkTypeList == null) {
+        drinkTypeVM.fetchData();
+      }
+    } else if (val == DrawerView.recipes) {
+      DrinkTypeViewModel drinkTypeVM =
+          Provider.of<DrinkTypeViewModel>(context, listen: false);
       if (drinkTypeVM.drinkTypeList == null) {
         drinkTypeVM.fetchData();
       }

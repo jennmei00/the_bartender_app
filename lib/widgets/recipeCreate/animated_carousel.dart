@@ -2,14 +2,15 @@ import 'package:card_swiper/card_swiper.dart';
 import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
+import 'package:the_bartender_app/models/drink_type.dart';
 import 'package:the_bartender_app/res/style/app_theme.dart';
-import 'package:the_bartender_app/utils/enum.dart';
 import 'package:the_bartender_app/utils/string_util.dart';
+import 'package:the_bartender_app/viewmodels/drink_type_view_model.dart';
 
 class AnimatedCarousel extends StatefulWidget {
   final Function onCarouselIndexChanged;
   const AnimatedCarousel({super.key, required this.onCarouselIndexChanged});
-  
 
   @override
   State<AnimatedCarousel> createState() => _AnimatedCarouselState();
@@ -18,12 +19,47 @@ class AnimatedCarousel extends StatefulWidget {
 class _AnimatedCarouselState extends State<AnimatedCarousel> {
   int _carouselIndex = 0;
   final SwiperController _swiperController = SwiperController();
+  List<Widget> carouselList = [];
+  List<DrinkType> drinkTypeList = [];
 
   @override
   void initState() {
     super.initState();
-    _carouselIndex = (DrinkTypeEnum.values.length / 2).floor();
-    _swiperController.index = (DrinkTypeEnum.values.length / 2).floor();
+    drinkTypeList =
+        Provider.of<DrinkTypeViewModel>(context, listen: false).drinkTypeList!;
+    _carouselIndex = (drinkTypeList.length / 2).floor();
+    _swiperController.index = (drinkTypeList.length / 2).floor();
+
+    carouselList = drinkTypeList
+        .map(
+          (val) => Stack(
+            children: [
+              Container(
+                alignment: Alignment.center,
+                height: 150,
+                width: 100,
+                child: SvgPicture.asset(
+                  'assets/svg/cocktail.svg',
+                  height: 200,
+                ),
+              ),
+              Container(
+                height: 160,
+                width: 100,
+                alignment: Alignment.bottomRight,
+                child: Transform.rotate(
+                  angle: -0.60,
+                  child: Text(
+                    capitalizeFirstLetter(val.name),
+                    style: AppTheme.themeData.textTheme.titleMedium!
+                        .copyWith(fontSize: 25),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        )
+        .toList();
   }
 
   @override
@@ -35,7 +71,7 @@ class _AnimatedCarouselState extends State<AnimatedCarousel> {
             height: 200,
             width: 400,
             child: Swiper(
-              itemCount: DrinkTypeEnum.values.length,
+              itemCount: drinkTypeList.length,
               itemBuilder: (context, index) {
                 final val = carouselList[index];
                 return AnimatedOpacity(
@@ -47,7 +83,7 @@ class _AnimatedCarouselState extends State<AnimatedCarousel> {
               viewportFraction: 0.3,
               scale: 0.5,
               onIndexChanged: (value) {
-                 widget.onCarouselIndexChanged(value);
+                widget.onCarouselIndexChanged(value);
                 setState(() => _carouselIndex = value);
               },
               loop: false,
@@ -90,35 +126,4 @@ class _AnimatedCarouselState extends State<AnimatedCarousel> {
       ],
     );
   }
-
-  List<Widget> carouselList = DrinkTypeEnum.values
-      .map(
-        (val) => Stack(
-          children: [
-            Container(
-              alignment: Alignment.center,
-              height: 150,
-              width: 100,
-              child: SvgPicture.asset(
-                'assets/svg/cocktail.svg',
-                height: 200,
-              ),
-            ),
-            Container(
-              height: 160,
-              width: 100,
-              alignment: Alignment.bottomRight,
-              child: Transform.rotate(
-                angle: -0.60,
-                child: Text(
-                  capitalizeFirstLetter(val.name),
-                  style: AppTheme.themeData.textTheme.titleMedium!
-                      .copyWith(fontSize: 25),
-                ),
-              ),
-            ),
-          ],
-        ),
-      )
-      .toList();
 }

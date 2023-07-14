@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:auto_route/auto_route.dart';
 import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +10,7 @@ import 'package:the_bartender_app/res/style/app_theme.dart';
 import 'package:the_bartender_app/utils/route_util.dart';
 import 'package:the_bartender_app/viewmodels/recipe_view_model.dart';
 import 'package:the_bartender_app/widgets/cocktail_card.dart';
-import 'package:the_bartender_app/widgets/styled_drawer.dart';
+import 'package:the_bartender_app/widgets/custom_scaffold.dart';
 import 'package:the_bartender_app/widgets/styled_error.dart';
 
 class RecipeSearchResultView extends StatelessWidget {
@@ -22,69 +20,58 @@ class RecipeSearchResultView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration:  const BoxDecoration(
-          image: DecorationImage(
-        image: AppTheme.backgroundImage,
-        fit: BoxFit.cover,
-      )),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 1.0, sigmaY: 1.0),
-        child: Scaffold(
-          drawer: const StyledDrawer(
-            drawerView: DrawerView.recipe,
+    return CustomScaffold(
+      image: AppTheme.backgroundImage,
+      drawerView: DrawerView.recipes,
+      body: CustomScrollView(
+        physics: const BouncingScrollPhysics(),
+        key: GlobalKey(),
+        slivers: [
+          SliverAppBar(
+            title: Padding(
+              padding: const EdgeInsets.only(top: 8, bottom: 0),
+              child: Text(
+                'recipes'.i18n().toUpperCase(),
+              ),
+            ),
+            leading: Builder(builder: (context) {
+              return IconButton(
+                icon: const Icon(CommunityMaterialIcons.close),
+                onPressed: () => AutoRouter.of(context).pop(),
+              );
+            }),
           ),
-          body: CustomScrollView(
-            physics: const BouncingScrollPhysics(),
-            key: GlobalKey(),
-            slivers: [
-              SliverAppBar(
-                title: Padding(
-                  padding: const EdgeInsets.only(top: 8, bottom: 0),
+          SliverToBoxAdapter(
+            child: Column(
+              children: [
+                const SizedBox(height: 20),
+                SvgPicture.asset(
+                  'assets/svg/neon_find.svg',
+                  width: MediaQuery.of(context).size.width * 0.50,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 25),
                   child: Text(
-                    'recipes'.i18n().toUpperCase(),
+                    'results_for'.i18n(),
+                    style: AppTheme.themeData.textTheme.titleSmall,
+                    textAlign: TextAlign.center,
                   ),
                 ),
-                leading: Builder(builder: (context) {
-                  return IconButton(
-                    icon: const Icon(CommunityMaterialIcons.close),
-                    onPressed: () => AutoRouter.of(context).pop(),
-                  );
-                }),
-              ),
-              SliverToBoxAdapter(
-                child: Column(
-                  children: [
-                    const SizedBox(height: 20),
-                    SvgPicture.asset(
-                      'assets/svg/neon_find.svg',
-                      width: MediaQuery.of(context).size.width * 0.85,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 25),
-                      child: Text(
-                        'results_for'.i18n(),
-                        style: AppTheme.themeData.textTheme.titleSmall,
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 25),
-                      child: Text(
-                        '${Provider.of<RecipeViewModel>(context).searchText}',
-                        style: AppTheme.themeData.textTheme.titleSmall,
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ],
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 25),
+                  child: Text(
+                    '${Provider.of<RecipeViewModel>(context).searchText}',
+                    style: AppTheme.themeData.textTheme.titleSmall,
+                    textAlign: TextAlign.center,
+                  ),
                 ),
-              ),
-              Consumer<RecipeViewModel>(
-                  builder: (context, value, child) =>
-                      getRecipeWidgetList(context, value)),
-            ],
+              ],
+            ),
           ),
-        ),
+          Consumer<RecipeViewModel>(
+              builder: (context, value, child) =>
+                  getRecipeWidgetList(context, value)),
+        ],
       ),
     );
   }
@@ -107,9 +94,8 @@ class RecipeSearchResultView extends StatelessWidget {
         );
       case Status.initial:
       case Status.error:
-        return SliverToBoxAdapter(child: StyledError(message: '${apiResponse.message}'));
+        return SliverToBoxAdapter(
+            child: StyledError(message: '${apiResponse.message}'));
     }
   }
 }
-
-

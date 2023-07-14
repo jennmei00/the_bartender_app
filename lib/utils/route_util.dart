@@ -3,7 +3,7 @@ import 'package:the_bartender_app/utils/routes/router.gr.dart';
 
 enum DrawerView {
   home,
-  recipe,
+  recipes,
   yourCreation,
   newsAndEvents,
   contact,
@@ -11,7 +11,7 @@ enum DrawerView {
 
 Map<DrawerView, PageRouteInfo> drawerViewMap  = {
   DrawerView.home: const HomeViewRoute(),
-  DrawerView.recipe: RecipeViewRoute(),
+  DrawerView.recipes: RecipeViewRoute(),
   DrawerView.yourCreation: YourCreationViewRoute(),
   DrawerView.newsAndEvents: const NewsAndEventsViewRoute(),
   DrawerView.contact: const ContactViewRoute(),

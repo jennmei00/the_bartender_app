@@ -68,86 +68,83 @@ class _RecipeViewState extends State<RecipeView> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
-      child: CustomScaffold(
-        drawerView: DrawerView.recipe,
-        body: Column(
-          children: [
-            Expanded(
-              child: CustomScrollView(
-                physics: const BouncingScrollPhysics(),
-                key: customScrollViewKey,
-                slivers: [
-                  SliverAppBar(
-                    title: Padding(
-                      padding: const EdgeInsets.only(top: 8, bottom: 0),
-                      child: Text(
-                        'recipes'.i18n().toUpperCase(),
-                      ),
-                    ),
-                    leading: Builder(builder: (context) {
-                      return IconButton(
-                        icon: const Icon(CommunityMaterialIcons.dots_vertical),
-                        onPressed: () => Scaffold.of(context).openDrawer(),
-                      );
-                    }),
-                  ),
-                  SliverList(
-                    delegate: SliverChildBuilderDelegate(
-                      (context, index) => Column(
-                        children: [
-                          const SizedBox(height: 20),
-                          SvgPicture.asset(
-                            'assets/svg/neon_find.svg',
-                            width: MediaQuery.of(context).size.width * 0.85,
-                          ),
-                          Container(
-                            padding: const EdgeInsets.all(25),
-                            child: Text(
-                              'search_text'.i18n(),
-                              style: AppTheme.themeData.textTheme.titleSmall,
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                          const SizedBox(height: 20),
-                          Consumer2<SeasonViewModel, DrinkTypeViewModel>(
-                            builder: (context, seasonVM, drinkTypeVM, child) {
-                              if (seasonVM.response.status == Status.error ||
-                                  drinkTypeVM.response.status == Status.error) {
-                                return StyledError(
-                                    message:
-                                        '${seasonVM.response.status == Status.error ? seasonVM.response.message : drinkTypeVM.response.message}');
-                              } else if (seasonVM.response.status ==
-                                      Status.completed &&
-                                  drinkTypeVM.response.status ==
-                                      Status.completed) {
-                                return getLoadedData();
-                              } else {
-                                return const Center(
-                                    child:
-                                        CircularProgressIndicator.adaptive());
-                              }
-                            },
-                          )
-                        ],
-                      ),
-                      childCount: 1,
+    return CustomScaffold(
+      image: AppTheme.backgroundImage,
+      drawerView: DrawerView.recipes,
+      body: Column(
+        children: [
+          Expanded(
+            child: CustomScrollView(
+              physics: const BouncingScrollPhysics(),
+              key: customScrollViewKey,
+              slivers: [
+                SliverAppBar(
+                  title: Padding(
+                    padding: const EdgeInsets.only(top: 8, bottom: 0),
+                    child: Text(
+                      'recipes'.i18n().toUpperCase(),
                     ),
                   ),
-                ],
-              ),
+                  leading: Builder(builder: (context) {
+                    return IconButton(
+                      icon: const Icon(CommunityMaterialIcons.dots_vertical),
+                      onPressed: () => Scaffold.of(context).openDrawer(),
+                    );
+                  }),
+                ),
+                SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) => Column(
+                      children: [
+                        const SizedBox(height: 20),
+                        SvgPicture.asset(
+                          'assets/svg/neon_find.svg',
+                          width: MediaQuery.of(context).size.width * 0.50,
+                        ),
+                        Container(
+                          padding: const EdgeInsets.all(25),
+                          child: Text(
+                            'search_text'.i18n(),
+                            style: AppTheme.themeData.textTheme.titleSmall,
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        Consumer2<SeasonViewModel, DrinkTypeViewModel>(
+                          builder: (context, seasonVM, drinkTypeVM, child) {
+                            if (seasonVM.response.status == Status.error ||
+                                drinkTypeVM.response.status == Status.error) {
+                              return StyledError(
+                                  message:
+                                      '${seasonVM.response.status == Status.error ? seasonVM.response.message : drinkTypeVM.response.message}');
+                            } else if (seasonVM.response.status ==
+                                    Status.completed &&
+                                drinkTypeVM.response.status ==
+                                    Status.completed) {
+                              return getLoadedData();
+                            } else {
+                              return const Center(
+                                  child: CircularProgressIndicator.adaptive());
+                            }
+                          },
+                        )
+                      ],
+                    ),
+                    childCount: 1,
+                  ),
+                ),
+              ],
             ),
-            Container(
-              alignment: Alignment.bottomCenter,
-              padding: const EdgeInsets.only(bottom: 12),
-              child: StyledButton(
-                title: 'search'.i18n(),
-                onButtonPressed: () => onSearchPressed(context),
-              ),
+          ),
+          Container(
+            alignment: Alignment.bottomCenter,
+            padding: const EdgeInsets.only(bottom: 12),
+            child: StyledButton(
+              title: 'search'.i18n(),
+              onButtonPressed: () => onSearchPressed(context),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -313,43 +310,43 @@ class _RecipeViewState extends State<RecipeView> {
           style: AppTheme.themeData.textTheme.titleSmall,
           textAlign: TextAlign.center,
         ),
-        OrientationBuilder(builder: (context, orientation) {
-          return Container(
-            margin: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              color: AppTheme.styledTextFieldColor.withOpacity(0.6),
-              borderRadius: const BorderRadius.all(Radius.circular(15.0)),
-              border: Border.all(
-                width: 3,
-                color: Colors.white,
-              ),
+        Container(
+          margin: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: AppTheme.styledTextFieldColor.withOpacity(0.6),
+            borderRadius: const BorderRadius.all(Radius.circular(15.0)),
+            border: Border.all(
+              width: 3,
+              color: Colors.white,
             ),
-            child: ExpansionTile(
-                key: expansionTileKey,
-                shape: const Border(),
-                leading: const Icon(
-                  CommunityMaterialIcons.filter,
-                  size: 30,
-                ),
-                title: Text(
-                  'filter'.i18n(),
-                  style: const TextStyle(fontSize: 30),
-                ),
-                childrenPadding: const EdgeInsets.only(left: 10),
-                children: [
-                  orientation == Orientation.landscape
-                      ? Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: getChildren(context, orientation),
-                        )
-                      : Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: getChildren(context, orientation),
-                        )
-                ]),
-          );
-        }),
+          ),
+          child: ExpansionTile(
+              key: expansionTileKey,
+              shape: const Border(),
+              leading: const Icon(
+                CommunityMaterialIcons.filter,
+                size: 30,
+              ),
+              title: Text(
+                'filter'.i18n(),
+                style: const TextStyle(fontSize: 30),
+              ),
+              childrenPadding: const EdgeInsets.only(left: 10),
+              children: [
+                MediaQuery.of(context).orientation == Orientation.landscape
+                    ? Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: getChildren(
+                            context, MediaQuery.of(context).orientation),
+                      )
+                    : Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: getChildren(
+                            context, MediaQuery.of(context).orientation),
+                      )
+              ]),
+        ),
         TextButton(
           onPressed: () => _onClearSearchPressed(),
           child: Text('Clear Search',

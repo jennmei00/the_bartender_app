@@ -61,7 +61,6 @@ class _InformationEditExpansionTileState
       childrenPadding: const EdgeInsets.only(left: 30),
       expandedAlignment: Alignment.center,
       expandedCrossAxisAlignment: CrossAxisAlignment.start,
-      initiallyExpanded: true, //TODOCLOSE
       children: [
         Table(
           defaultColumnWidth: const IntrinsicColumnWidth(),

@@ -4,21 +4,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:localization/localization.dart';
 import 'package:provider/provider.dart';
+import 'package:the_bartender_app/data/api/api_response.dart';
+import 'package:the_bartender_app/models/drink_type.dart';
 import 'package:the_bartender_app/models/season.dart';
 import 'package:the_bartender_app/models/tool.dart';
 import 'package:the_bartender_app/res/style/app_theme.dart';
-import 'package:the_bartender_app/utils/enum.dart';
 import 'package:the_bartender_app/utils/route_util.dart';
 import 'package:the_bartender_app/utils/routes/router.gr.dart';
+import 'package:the_bartender_app/viewmodels/drink_type_view_model.dart';
 import 'package:the_bartender_app/viewmodels/season_view_model.dart';
 import 'package:the_bartender_app/viewmodels/tool_view_model.dart';
+import 'package:the_bartender_app/widgets/custom_scaffold.dart';
 import 'package:the_bartender_app/widgets/recipeCreate/animated_carousel.dart';
 import 'package:the_bartender_app/widgets/styled_button.dart';
-import 'package:the_bartender_app/widgets/styled_drawer.dart';
+import 'package:the_bartender_app/widgets/styled_error.dart';
 import 'package:the_bartender_app/widgets/styled_textfield.dart';
 
 class YourCreationView extends StatefulWidget {
-
   const YourCreationView({super.key});
 
   @override
@@ -30,12 +32,17 @@ class _YourCreationViewState extends State<YourCreationView> {
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
-   int _carouselIndex = (DrinkTypeEnum.values.length / 2).floor();
+  int _carouselIndex = 0;
+  @override
+  void initState() {
+    super.initState();
+  }
 
   void onCreatePressed(BuildContext context) {
     if (formKey.currentState!.validate()) {
-      DrinkTypeEnum drinkTypeEnum =
-          DrinkTypeEnum.values[_carouselIndex]; //TODOChange enum to data of database
+      DrinkType drinkType =
+          Provider.of<DrinkTypeViewModel>(context, listen: false)
+              .drinkTypeList![_carouselIndex];
       String name = nameController.text;
 
       List<Season>? seasonList =
@@ -44,124 +51,139 @@ class _YourCreationViewState extends State<YourCreationView> {
         Provider.of<SeasonViewModel>(context, listen: false).fetchData();
       }
 
-      List<Tool>? toolList = Provider.of<ToolViewModel>(context, listen: false).toolList;
-      if(toolList == null || toolList.isEmpty) {
+      List<Tool>? toolList =
+          Provider.of<ToolViewModel>(context, listen: false).toolList;
+      if (toolList == null || toolList.isEmpty) {
         Provider.of<ToolViewModel>(context, listen: false).fetchData();
       }
-      AutoRouter.of(context).push(YourCreationDetailViewRoute(
-          drinkTypeEnum: drinkTypeEnum, name: name));
+      AutoRouter.of(context)
+          .push(YourCreationDetailViewRoute(drinkType: drinkType, name: name));
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration:  const BoxDecoration(
-          image: DecorationImage(
-        image: AppTheme.backgroundImage,
-        fit: BoxFit.cover,
-      )),
-      child: BackdropFilter(
-        filter: AppTheme.backgroundImageFilter,
-        child: Scaffold(
-          drawer: const StyledDrawer(
-            drawerView: DrawerView.yourCreation,
-          ),
-          body: Column(
-            children: [
-              Expanded(
-                child: CustomScrollView(
-                  physics: const BouncingScrollPhysics(),
-                  key: GlobalKey(),
-                  slivers: [
-                    SliverAppBar(
-                      title: Padding(
-                        padding: const EdgeInsets.only(top: 8, bottom: 0),
-                        child: Text(
-                          'your_creation'.i18n().toUpperCase(),
-                        ),
-                      ),
-                      leading: Builder(builder: (context) {
-                        return IconButton(
-                          icon:
-                              const Icon(CommunityMaterialIcons.dots_vertical),
-                          onPressed: () => Scaffold.of(context).openDrawer(),
-                        );
-                      }),
+    return CustomScaffold(
+      image: AppTheme.backgroundImage,
+      drawerView: DrawerView.yourCreation,
+      body: Column(
+        children: [
+          Expanded(
+            child: CustomScrollView(
+              physics: const BouncingScrollPhysics(),
+              key: GlobalKey(),
+              slivers: [
+                SliverAppBar(
+                  title: Padding(
+                    padding: const EdgeInsets.only(top: 8, bottom: 0),
+                    child: Text(
+                      'your_creation'.i18n().toUpperCase(),
                     ),
-                    SliverList(
-                      delegate: SliverChildBuilderDelegate(
-                        (context, index) {
-                          var children2 = [
-                            const SizedBox(height: 20),
-                            SvgPicture.asset(
-                              'assets/svg/neon_create.svg',
-                              width: MediaQuery.of(context).size.width * 0.85,
-                            ),
-                            Container(
-                              padding: const EdgeInsets.all(25),
-                              child: Text(
-                                'your_creation_text'.i18n(),
-                                style: AppTheme.themeData.textTheme.titleSmall,
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
-                            const SizedBox(height: 10),
-                            AnimatedCarousel(
-                              onCarouselIndexChanged: (value) =>
-                                _carouselIndex = value,
-                              
-                            ),
-                            const SizedBox(height: 20),
-                            Container(
-                              width: double.infinity,
-                              padding: const EdgeInsets.only(left: 20.0),
-                              child: Text(
-                                'name'.i18n(),
-                                style: AppTheme.themeData.textTheme.bodySmall!
-                                    .copyWith(
-                                  fontStyle: FontStyle.italic,
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(left: 20.0, right: 20),
-                              child: Form(
-                                key: formKey,
-                                child: StyledTextfield(
-                                  controller: nameController,
-                                  validator: (String value) {
-                                    if (value.isEmpty || value == '') {
-                                      return 'mandatory_field'.i18n();
-                                    }
-                                  },
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 15),
-                          ];
-                          return Column(
-                            children: children2,
-                          );
-                        },
-                        childCount: 1,
-                      ),
-                    ),
-                  ],
+                  ),
+                  leading: Builder(builder: (context) {
+                    return IconButton(
+                      icon: const Icon(CommunityMaterialIcons.dots_vertical),
+                      onPressed: () => Scaffold.of(context).openDrawer(),
+                    );
+                  }),
                 ),
-              ),
-              Container(
-                alignment: Alignment.bottomCenter,
-                padding: const EdgeInsets.only(bottom: 12),
-                child: StyledButton(
-                  title: 'create'.i18n(),
-                  onButtonPressed: () => onCreatePressed(context),
+                SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) {
+                      return Column(
+                        children: [
+                          const SizedBox(height: 20),
+                          SvgPicture.asset(
+                            'assets/svg/neon_create.svg',
+                            width: MediaQuery.of(context).size.width * 0.50,
+                          ),
+                          Container(
+                            padding: const EdgeInsets.all(25),
+                            child: Text(
+                              'your_creation_text'.i18n(),
+                              style: AppTheme.themeData.textTheme.titleSmall,
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          Consumer<DrinkTypeViewModel>(
+                              builder: (context, vm, child) {
+                            switch (vm.response.status) {
+                              case Status.loading || Status.initial:
+                                return const Center(
+                                    child:
+                                        CircularProgressIndicator.adaptive());
+                              case Status.completed:
+                                _carouselIndex =
+                                    (Provider.of<DrinkTypeViewModel>(context,
+                                                    listen: false)
+                                                .drinkTypeList!
+                                                .length /
+                                            2)
+                                        .floor();
+
+                                return Column(
+                                  children: [
+                                    AnimatedCarousel(
+                                      onCarouselIndexChanged: (value) =>
+                                          _carouselIndex = value,
+                                    ),
+                                    const SizedBox(height: 20),
+                                    Container(
+                                      width: double.infinity,
+                                      padding:
+                                          const EdgeInsets.only(left: 20.0),
+                                      child: Text(
+                                        'name'.i18n(),
+                                        style: AppTheme
+                                            .themeData.textTheme.bodySmall!
+                                            .copyWith(
+                                          fontStyle: FontStyle.italic,
+                                        ),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 20.0, right: 20),
+                                      child: Form(
+                                        key: formKey,
+                                        child: StyledTextfield(
+                                          controller: nameController,
+                                          validator: (String value) {
+                                            if (value.isEmpty || value == '') {
+                                              return 'mandatory_field'.i18n();
+                                            }
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                );
+
+                              case Status.error:
+                                return StyledError(
+                                    message: '${vm.response.message}');
+                            }
+                          }),
+                          const SizedBox(height: 15),
+                        ],
+                      );
+                    },
+                    childCount: 1,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
+          Container(
+            alignment: Alignment.bottomCenter,
+            padding: const EdgeInsets.only(bottom: 12),
+            child: StyledButton(
+              title: 'create'.i18n(),
+              onButtonPressed: () => onCreatePressed(context),
+            ),
+          ),
+        ],
       ),
     );
   }
