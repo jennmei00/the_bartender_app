@@ -1,7 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_stars/flutter_rating_stars.dart';
 import 'package:localization/localization.dart';
 import 'package:provider/provider.dart';
 import 'package:the_bartender_app/data/api/api_response.dart';
@@ -91,18 +90,6 @@ class RecipeDetailWidget extends StatelessWidget {
         IngredientExpansionTile(recipe: recipe),
         const Divider(),
         InstructionExpansionTile(recipe: recipe),
-        RatingStars(
-          starBuilder: (index, color) {
-            return recipe.rating < index
-                ? const Icon(CommunityMaterialIcons.star_outline)
-                : const Icon(CommunityMaterialIcons.star);
-          },
-          value: recipe.rating.toDouble(),
-          starColor: Colors.white,
-          starOffColor: Colors.transparent,
-          valueLabelVisibility: false,
-          starSize: 25,
-        ),
         const SizedBox(height: 30),
       ],
     );

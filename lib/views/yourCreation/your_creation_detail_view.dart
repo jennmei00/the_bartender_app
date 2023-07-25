@@ -1,7 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_stars/flutter_rating_stars.dart';
 import 'package:localization/localization.dart';
 import 'package:provider/provider.dart';
 import 'package:the_bartender_app/data/api/api_response.dart';
@@ -10,11 +9,12 @@ import 'package:the_bartender_app/res/style/app_theme.dart';
 import 'package:the_bartender_app/utils/route_util.dart';
 import 'package:the_bartender_app/viewmodels/season_view_model.dart';
 import 'package:the_bartender_app/viewmodels/tool_view_model.dart';
+import 'package:the_bartender_app/viewmodels/unit_view_model.dart';
 import 'package:the_bartender_app/widgets/cocktail_image_widget.dart';
 import 'package:the_bartender_app/widgets/custom_scaffold.dart';
-import 'package:the_bartender_app/widgets/recipeCreate/recipeCreateEdit/information_edit_expansion_tile.dart';
-import 'package:the_bartender_app/widgets/recipeCreate/recipeCreateEdit/ingredient_edit_expansion_tile.dart';
-import 'package:the_bartender_app/widgets/recipeCreate/recipeCreateEdit/instruction_edit_expansion_tile.dart';
+import 'package:the_bartender_app/widgets/yourCreation/recipeCreateEdit/information_edit_expansion_tile.dart';
+import 'package:the_bartender_app/widgets/yourCreation/recipeCreateEdit/ingredient_edit_expansion_tile.dart';
+import 'package:the_bartender_app/widgets/yourCreation/recipeCreateEdit/instruction_edit_expansion_tile.dart';
 import 'package:the_bartender_app/widgets/styled_button.dart';
 import 'package:the_bartender_app/widgets/styled_error.dart';
 
@@ -80,16 +80,20 @@ class _YourCreationDetailViewState extends State<YourCreationDetailView> {
                   delegate: SliverChildBuilderDelegate(
                     (context, index) => Column(
                       children: [
-                        CocktailImageWidget(name: widget.name, drinkType: widget.drinkType),
+                        CocktailImageWidget(
+                            name: widget.name, drinkType: widget.drinkType),
                         Text(
                           'recipe_detail_text'.i18n(),
                           style: AppTheme.themeData.textTheme.displayMedium,
                           textAlign: TextAlign.center,
                         ),
                         const SizedBox(height: 20),
-                        Consumer2<SeasonViewModel, ToolViewModel>(
-                            builder: (context, seasonVM, toolVM, child) =>
-                                getCreationEditWidgets(seasonVM, toolVM)),
+                        Consumer3<SeasonViewModel, ToolViewModel,
+                                UnitViewModel>(
+                            builder:
+                                (context, seasonVM, toolVM, unitVM, child) =>
+                                    getCreationEditWidgets(
+                                        seasonVM, toolVM, unitVM)),
                         const SizedBox(height: 30),
                       ],
                     ),
@@ -119,36 +123,23 @@ class _YourCreationDetailViewState extends State<YourCreationDetailView> {
   }
 
   Widget getCreationEditWidgets(
-      SeasonViewModel seasonVM, ToolViewModel toolVM) {
+      SeasonViewModel seasonVM, ToolViewModel toolVM, UnitViewModel unitVM) {
     if (seasonVM.response.status == Status.error ||
-        toolVM.response.status == Status.error) {
+        toolVM.response.status == Status.error ||
+        unitVM.response.status == Status.error) {
       return StyledError(
           message:
-              '${seasonVM.response.status == Status.error ? seasonVM.response.message : toolVM.response.message}');
+              '${seasonVM.response.status == Status.error ? seasonVM.response.message : toolVM.response.status == Status.error ? toolVM.response.message : unitVM.response.message}');
     } else if (seasonVM.response.status == Status.completed &&
-        toolVM.response.status == Status.completed) {
+        toolVM.response.status == Status.completed &&
+        unitVM.response.status == Status.completed) {
       return Column(
         children: [
           const InformationEditExpansionTile(),
           const Divider(),
           const IngredientEditExpansionTile(),
           const Divider(),
-          const InstructionEditExpansionTile(),
-          RatingStars(
-            starBuilder: (index, color) {
-              return color ==
-                      Colors
-                          .transparent //TODOStar reting (recipe.rating < index)
-                  ? const Icon(CommunityMaterialIcons.star_outline)
-                  : const Icon(CommunityMaterialIcons.star);
-            },
-            value: starRatingValue,
-            starColor: Colors.white,
-            starOffColor: Colors.transparent,
-            valueLabelVisibility: false,
-            starSize: 25,
-            onValueChanged: (value) => setState(() => starRatingValue = value),
-          ),
+          InstructionEditExpansionTile(),
         ],
       );
     } else {

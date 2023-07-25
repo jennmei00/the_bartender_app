@@ -22,12 +22,13 @@ class InformationEditExpansionTile extends StatefulWidget {
 class _InformationEditExpansionTileState
     extends State<InformationEditExpansionTile> {
   final TextEditingController prepTimeController =
-      TextEditingController(text: '10');
+      TextEditingController();
   List<Season> seasonList = [];
   Season? selectedSeason;
   List<Tool> toolList = [];
   Tool? selectedTool;
   List<Tool> selectedToolList = [];
+  bool groupValueAlcoholic = true;
 
   @override
   void initState() {
@@ -106,7 +107,8 @@ class _InformationEditExpansionTileState
                 Padding(
                   padding: const EdgeInsets.only(left: 30.0, bottom: 20.0),
                   child: StyledDropDown(
-                    onSeasonChanged: (value) {
+                    seasonDropDown: true,
+                    onChanged: (value) {
                       setState(() {
                         selectedSeason = value;
                       });
@@ -206,15 +208,24 @@ class _InformationEditExpansionTileState
                           Transform.scale(
                             scale: 0.8,
                             child: Radio(
-                              value: false,
-                              groupValue: true,
-                              onChanged: (value) {},
+                              value: true,
+                              groupValue: groupValueAlcoholic,
+                              onChanged: (value) {
+                                setState(
+                                  () => groupValueAlcoholic = value!,
+                                );
+                              },
                               activeColor: AppTheme.secondaryColor,
                             ),
                           ),
-                          Text(
-                            'yes'.i18n(),
-                            style: AppTheme.themeData.textTheme.bodySmall,
+                          GestureDetector(
+                            onTap: () => setState(
+                              () => groupValueAlcoholic = true,
+                            ),
+                            child: Text(
+                              'yes'.i18n(),
+                              style: AppTheme.themeData.textTheme.bodySmall,
+                            ),
                           )
                         ],
                       ),
@@ -227,15 +238,24 @@ class _InformationEditExpansionTileState
                           Transform.scale(
                             scale: 0.8,
                             child: Radio(
-                              value: true,
-                              groupValue: true,
-                              onChanged: (value) {},
+                              value: false,
+                              groupValue: groupValueAlcoholic,
+                              onChanged: (value) {
+                                setState(
+                                  () => groupValueAlcoholic = value!,
+                                );
+                              },
                               activeColor: AppTheme.secondaryColor,
                             ),
                           ),
-                          Text(
-                            'no'.i18n(),
-                            style: AppTheme.themeData.textTheme.bodySmall,
+                          GestureDetector(
+                            onTap: () => setState(
+                              () => groupValueAlcoholic = false,
+                            ),
+                            child: Text(
+                              'no'.i18n(),
+                              style: AppTheme.themeData.textTheme.bodySmall,
+                            ),
                           ),
                         ],
                       ),

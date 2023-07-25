@@ -1,7 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_stars/flutter_rating_stars.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:the_bartender_app/models/recipe.dart';
@@ -45,20 +44,6 @@ class CocktailCard extends StatelessWidget {
                     recipe.name,
                     style: AppTheme.themeData.textTheme.titleSmall!
                         .copyWith(fontSize: 25),
-                  ),
-                  const SizedBox(height: 20),
-                  RatingStars(
-                    starBuilder: (index, color) {
-                      return 
-                      
-            recipe.rating < index
-                          ? const Icon(CommunityMaterialIcons.star_outline)
-                          : const Icon(CommunityMaterialIcons.star);
-                    },
-                    value: recipe.rating,
-                    starColor: Colors.white,
-                    starOffColor: Colors.transparent,
-                    valueLabelVisibility: false,
                   ),
                   const SizedBox(height: 20),
                   Padding(

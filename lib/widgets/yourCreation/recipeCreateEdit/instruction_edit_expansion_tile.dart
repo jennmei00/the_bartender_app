@@ -5,7 +5,8 @@ import 'package:the_bartender_app/res/style/app_theme.dart';
 import 'package:the_bartender_app/widgets/styled_textfield.dart';
 
 class InstructionEditExpansionTile extends StatelessWidget {
-  const InstructionEditExpansionTile({super.key});
+  InstructionEditExpansionTile({super.key});
+  final TextEditingController instructionController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -40,9 +41,8 @@ class InstructionEditExpansionTile extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(left: 0.0, right: 30.0),
               child: StyledTextfield(
-                controller: TextEditingController(text: 'Fill the Apple juice in the glass :D And the rest of the ingredients xD'),
-                textInputType: TextInputType.multiline
-              ),
+                  controller: instructionController,
+                  textInputType: TextInputType.multiline),
             ),
           ],
         ),

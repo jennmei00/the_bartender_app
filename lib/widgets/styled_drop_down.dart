@@ -1,16 +1,26 @@
 import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:the_bartender_app/models/season.dart';
+import 'package:the_bartender_app/models/unit.dart';
 import 'package:the_bartender_app/res/style/app_theme.dart';
 import 'package:the_bartender_app/utils/string_util.dart';
 
 class StyledDropDown extends StatelessWidget {
-  final Function onSeasonChanged;
-  final Season season;
+  final Function onChanged;
+  final Season? season;
   final List<Season> seasonList;
-  const StyledDropDown({super.key, required this.onSeasonChanged, required this.season, required this.seasonList});
-
-
+  final Unit? unit;
+  final List<Unit> unitList;
+  final bool seasonDropDown;
+  const StyledDropDown({
+    super.key,
+    required this.onChanged,
+    this.season,
+    this.seasonList = const [],
+    this.unit,
+    this.unitList = const [],
+    required this.seasonDropDown,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -24,15 +34,23 @@ class StyledDropDown extends StatelessWidget {
         child: Padding(
             padding: const EdgeInsets.only(left: 10, right: 10),
             child: DropdownButton(
-              value: season,
-              items: seasonList
-                  .map((e) => DropdownMenuItem(
-                        value: e,
-                        child: Text(capitalizeFirstLetter(e.name)),
-                      ))
-                  .toList(),
-              onChanged: (value) =>  
-              onSeasonChanged(value),
+              value: seasonDropDown ? season! : unit!,
+              items: seasonDropDown
+                  ? seasonList
+                      .map((e) => DropdownMenuItem(
+                            value: e,
+                            child: Text(capitalizeFirstLetter(e.name)),
+                          ))
+                      .toList()
+                  : unitList
+                      .map((e) => DropdownMenuItem(
+                            value: e,
+                            child: Text(seasonDropDown
+                                ? capitalizeFirstLetter(e.name)
+                                : e.name),
+                          ))
+                      .toList(),
+              onChanged: (value) => onChanged(value),
               icon: const Padding(
                   padding: EdgeInsets.only(left: 20),
                   child: Icon(CommunityMaterialIcons.chevron_down)),

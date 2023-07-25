@@ -8,14 +8,16 @@ import 'package:the_bartender_app/data/api/api_response.dart';
 import 'package:the_bartender_app/models/drink_type.dart';
 import 'package:the_bartender_app/models/season.dart';
 import 'package:the_bartender_app/models/tool.dart';
+import 'package:the_bartender_app/models/unit.dart';
 import 'package:the_bartender_app/res/style/app_theme.dart';
 import 'package:the_bartender_app/utils/route_util.dart';
 import 'package:the_bartender_app/utils/routes/router.gr.dart';
 import 'package:the_bartender_app/viewmodels/drink_type_view_model.dart';
 import 'package:the_bartender_app/viewmodels/season_view_model.dart';
 import 'package:the_bartender_app/viewmodels/tool_view_model.dart';
+import 'package:the_bartender_app/viewmodels/unit_view_model.dart';
 import 'package:the_bartender_app/widgets/custom_scaffold.dart';
-import 'package:the_bartender_app/widgets/recipeCreate/animated_carousel.dart';
+import 'package:the_bartender_app/widgets/yourCreation/animated_carousel.dart';
 import 'package:the_bartender_app/widgets/styled_button.dart';
 import 'package:the_bartender_app/widgets/styled_error.dart';
 import 'package:the_bartender_app/widgets/styled_textfield.dart';
@@ -56,6 +58,13 @@ class _YourCreationViewState extends State<YourCreationView> {
       if (toolList == null || toolList.isEmpty) {
         Provider.of<ToolViewModel>(context, listen: false).fetchData();
       }
+
+      List<Unit>? unitList =
+          Provider.of<UnitViewModel>(context, listen: false).unitList;
+      if (unitList == null || unitList.isEmpty) {
+        Provider.of<UnitViewModel>(context, listen: false).fetchData();
+      }
+      
       AutoRouter.of(context)
           .push(YourCreationDetailViewRoute(drinkType: drinkType, name: name));
     }

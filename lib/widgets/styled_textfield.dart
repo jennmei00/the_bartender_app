@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:the_bartender_app/res/style/app_theme.dart';
 
 class StyledTextfield extends StatelessWidget {
@@ -10,6 +11,7 @@ class StyledTextfield extends StatelessWidget {
   final TextInputType? textInputType;
   final Function? validator;
   final bool enabled;
+  final bool onlyInteger;
 
   const StyledTextfield({
     super.key,
@@ -21,6 +23,7 @@ class StyledTextfield extends StatelessWidget {
     this.textInputType,
     this.validator,
     this.enabled = true,
+    this.onlyInteger = false,
   });
 
   final OutlineInputBorder _outlineInputBorder = const OutlineInputBorder(
@@ -34,7 +37,11 @@ class StyledTextfield extends StatelessWidget {
       height: textInputType == TextInputType.multiline ? null : height,
       width: width,
       child: TextFormField(
-        
+        inputFormatters: onlyInteger
+            ? <TextInputFormatter>[
+                FilteringTextInputFormatter.digitsOnly,
+              ]
+            : null,
         enabled: enabled,
         validator: validator == null ? null : (value) => validator!(value),
         style: AppTheme.themeData.textTheme.bodyMedium,

@@ -9,6 +9,7 @@ import 'package:the_bartender_app/viewmodels/season_view_model.dart';
 import 'package:the_bartender_app/viewmodels/recipe_detail_view_model.dart';
 import 'package:the_bartender_app/viewmodels/recipe_view_model.dart';
 import 'package:the_bartender_app/viewmodels/tool_view_model.dart';
+import 'package:the_bartender_app/viewmodels/unit_view_model.dart';
 
 void main() {
   runApp(MyApp());
@@ -33,7 +34,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider.value(value: RecipeDetailViewModel()),
         ChangeNotifierProvider.value(value: SeasonViewModel()),
         ChangeNotifierProvider.value(value: DrinkTypeViewModel()),
-        ChangeNotifierProvider.value(value: ToolViewModel ()),
+        ChangeNotifierProvider.value(value: ToolViewModel()),
+        ChangeNotifierProvider.value(value: UnitViewModel()),
       ],
       child: MaterialApp.router(
         title: 'The Bartender',
