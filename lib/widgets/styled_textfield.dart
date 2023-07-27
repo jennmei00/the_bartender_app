@@ -12,6 +12,7 @@ class StyledTextfield extends StatelessWidget {
   final Function? validator;
   final bool enabled;
   final bool onlyInteger;
+  final bool obscureText;
 
   const StyledTextfield({
     super.key,
@@ -24,6 +25,7 @@ class StyledTextfield extends StatelessWidget {
     this.validator,
     this.enabled = true,
     this.onlyInteger = false,
+    this.obscureText = false,
   });
 
   final OutlineInputBorder _outlineInputBorder = const OutlineInputBorder(
@@ -37,6 +39,7 @@ class StyledTextfield extends StatelessWidget {
       height: textInputType == TextInputType.multiline ? null : height,
       width: width,
       child: TextFormField(
+        obscureText: obscureText,
         inputFormatters: onlyInteger
             ? <TextInputFormatter>[
                 FilteringTextInputFormatter.digitsOnly,

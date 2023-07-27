@@ -37,5 +37,17 @@
     "unauthorized_request": "Unbefugte Anfrage",
     "invalid_input": "Ungültige Eingabe",
     "filter": "Filter",
-    "drink_type": "Getränkeart"
+    "drink_type": "Getränkeart",
+    "welcome": "Willkommen",
+    "register": "Registrieren",
+    "login": "Anmelden",
+    "logout": "Abmelden",
+    "account": "Konto",
+    "welcome_continue_text": "Fortfahren ohne\nRegistrierung",
+    "cancel": "Abbrechen",
+    "username": "Benutzername",
+    "password": "Passwort",
+    "wrong_login": "Falscher Benutzername oder Passwort",
+    "something_went_wrong": "Etwas ist schiefgelaufen",
+    "settings": "Einstellungen"
 }

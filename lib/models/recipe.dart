@@ -8,6 +8,7 @@ import 'package:the_bartender_app/models/ingredient.dart';
 import 'package:the_bartender_app/models/season.dart';
 import 'package:the_bartender_app/models/tool.dart';
 import 'package:the_bartender_app/models/unit.dart';
+import 'package:the_bartender_app/models/user.dart';
 
 class RecipeDetail {
   String id;
@@ -20,6 +21,7 @@ class RecipeDetail {
   String descriiption;
   int rating;
   //TODOUint8List? image;
+  User user;
   Season season;
   DrinkType drinkType;
   List<Tool> tools;
@@ -36,6 +38,7 @@ class RecipeDetail {
     required this.descriiption,
     required this.rating,
     //TODOthis.image,
+    required this.user,
     required this.season,
     required this.drinkType,
     required this.tools,
@@ -53,6 +56,7 @@ class RecipeDetail {
     String? descriiption,
     int? rating,
     Uint8List? image,
+    User? user,
     Season? season,
     DrinkType? drinkType,
     List<Tool>? tools,
@@ -69,6 +73,7 @@ class RecipeDetail {
       descriiption: descriiption ?? this.descriiption,
       rating: rating ?? this.rating,
       //TODOimage: image ?? this.image,
+      user: user ?? this.user,
       season: season ?? this.season,
       drinkType: drinkType ?? this.drinkType,
       tools: tools ?? this.tools,
@@ -91,7 +96,7 @@ class RecipeDetail {
     result.addAll({'descriiption': descriiption});
     result.addAll({'rating': rating});
     //TODOresult.addAll({'image': image!.toMap()});
-
+    result.addAll({'user': user.toMap()});
     result.addAll({'season': season.toMap()});
     result.addAll({'drinkType': drinkType.toMap()});
     result.addAll({'tools': tools.map((x) => x.toMap()).toList()});
@@ -114,6 +119,7 @@ class RecipeDetail {
       rating: map['rating']?.toInt() ?? 0,
       //TODOimage:
       //TODOmap['image'], // != null ? Uint8List.fromMap(map['image']) : null,
+      user: User.fromMap(map['user']),
       season: Season.fromMap(map['season']),
       drinkType: DrinkType.fromMap(map['drink_type']),
       tools: map['tools'] == null
@@ -140,7 +146,7 @@ class Recipe {
   String name;
   double rating;
   bool alcoholic;
-  String userName;
+  User user;
   Season season;
   //TODOImage
   Recipe({
@@ -148,7 +154,7 @@ class Recipe {
     required this.name,
     required this.rating,
     required this.alcoholic,
-    required this.userName,
+    required this.user,
     required this.season,
   });
 
@@ -157,7 +163,7 @@ class Recipe {
     String? name,
     double? rating,
     bool? alcoholic,
-    String? userName,
+    User? user,
     Season? season,
   }) {
     return Recipe(
@@ -165,7 +171,7 @@ class Recipe {
       name: name ?? this.name,
       rating: rating ?? this.rating,
       alcoholic: alcoholic ?? this.alcoholic,
-      userName: userName ?? this.userName,
+      user: user ?? this.user,
       season: season ?? this.season,
     );
   }
@@ -177,7 +183,7 @@ class Recipe {
     result.addAll({'name': name});
     result.addAll({'rating': rating});
     result.addAll({'alcoholic': alcoholic});
-    // result.addAll({'userName': userName});
+    result.addAll({'user': user.toMap()});
     result.addAll({'season': season.toMap()});
 
     return result;
@@ -189,7 +195,7 @@ class Recipe {
       name: map['name'] ?? '',
       rating: map['rating']?.toDouble() ?? 0.0,
       alcoholic: map['alcoholic'] ?? false,
-      userName: 'NIKmigg',
+      user: User.fromMap(map['user']),
       season: Season.fromMap(map['season']),
     );
   }

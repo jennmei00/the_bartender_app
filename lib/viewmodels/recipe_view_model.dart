@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
+import 'package:localization/localization.dart';
 import 'package:the_bartender_app/data/api/api_response.dart';
 import 'package:the_bartender_app/models/recipe.dart';
 import 'package:the_bartender_app/models/recipe_filter.dart';
@@ -33,7 +34,10 @@ class RecipeViewModel with ChangeNotifier {
       setSelectedRecipe(recipe);
       _apiResponse = ApiResponse.completed(recipeList);
     } catch (e) {
-      _apiResponse = ApiResponse.error(e.toString());
+      _apiResponse = ApiResponse.error('something_went_wrong'.i18n());
+      if (kDebugMode) {
+        print(e);
+      }
     }
     notifyListeners();
   }

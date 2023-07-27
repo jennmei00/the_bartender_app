@@ -37,5 +37,17 @@
     "unauthorized_request": "Unauthorized Request",
     "invalid_input": "Invalid Input",
     "filter": "Filter",
-    "drink_type": "Drink Type"
+    "drink_type": "Drink Type",
+    "welcome": "Welcome",
+    "register": "Register",
+    "login": "Login",
+    "logout": "Logout",
+    "account": "Account",
+    "welcome_continue_text": "Continue Without\nRegistration",
+    "cancel": "Cancel",
+    "username": "Username",
+    "password": "Password",
+    "wrong_login": "Wrong username or password",
+    "something_went_wrong": "Something went wrong",
+    "settings": "Settings"
 }

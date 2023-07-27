@@ -9,12 +9,14 @@ class CustomScaffold extends StatelessWidget {
   final DrawerView drawerView;
   final AssetImage image;
   final bool appBar;
+  final Widget? title;
   const CustomScaffold(
       {super.key,
       required this.body,
       required this.drawerView,
       required this.image,
-      this.appBar = false});
+      this.appBar = false,
+      this.title});
 
   @override
   Widget build(BuildContext context) {
@@ -28,21 +30,30 @@ class CustomScaffold extends StatelessWidget {
         )),
         child: BackdropFilter(
           filter: AppTheme.backgroundImageFilter,
-          child: Scaffold(
-            appBar: appBar
-                ? AppBar(
-                    leading: Builder(builder: (context) {
-                      return IconButton(
-                        icon: const Icon(CommunityMaterialIcons.dots_vertical),
-                        onPressed: () => Scaffold.of(context).openDrawer(),
-                      );
-                    }),
-                  )
-                : null,
-            drawer: StyledDrawer(
-              drawerView: drawerView,
+          child: SafeArea(
+            child: Scaffold(
+              appBar: appBar
+                  ? AppBar(
+                      leading: Builder(builder: (context) {
+                        return IconButton(
+                          icon:
+                              const Icon(CommunityMaterialIcons.dots_vertical),
+                          onPressed: () => Scaffold.of(context).openDrawer(),
+                        );
+                      }),
+                      title: title != null
+                          ? Padding(
+                              padding: const EdgeInsets.only(top: 8, bottom: 0),
+                              child: title,
+                            )
+                          : null,
+                    )
+                  : null,
+              drawer: StyledDrawer(
+                drawerView: drawerView,
+              ),
+              body: body,
             ),
-            body: body,
           ),
         ),
       ),

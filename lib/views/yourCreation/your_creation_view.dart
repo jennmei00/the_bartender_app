@@ -10,6 +10,7 @@ import 'package:the_bartender_app/models/season.dart';
 import 'package:the_bartender_app/models/tool.dart';
 import 'package:the_bartender_app/models/unit.dart';
 import 'package:the_bartender_app/res/style/app_theme.dart';
+import 'package:the_bartender_app/utils/globals.dart';
 import 'package:the_bartender_app/utils/route_util.dart';
 import 'package:the_bartender_app/utils/routes/router.gr.dart';
 import 'package:the_bartender_app/viewmodels/drink_type_view_model.dart';
@@ -64,7 +65,7 @@ class _YourCreationViewState extends State<YourCreationView> {
       if (unitList == null || unitList.isEmpty) {
         Provider.of<UnitViewModel>(context, listen: false).fetchData();
       }
-      
+
       AutoRouter.of(context)
           .push(YourCreationDetailViewRoute(drinkType: drinkType, name: name));
     }
@@ -115,65 +116,118 @@ class _YourCreationViewState extends State<YourCreationView> {
                             ),
                           ),
                           const SizedBox(height: 10),
-                          Consumer<DrinkTypeViewModel>(
-                              builder: (context, vm, child) {
-                            switch (vm.response.status) {
-                              case Status.loading || Status.initial:
-                                return const Center(
-                                    child:
-                                        CircularProgressIndicator.adaptive());
-                              case Status.completed:
-                                _carouselIndex =
-                                    (Provider.of<DrinkTypeViewModel>(context,
-                                                    listen: false)
-                                                .drinkTypeList!
-                                                .length /
-                                            2)
-                                        .floor();
+                          sharedPreferences!.getBool('loginActive') ?? false
+                              ? Consumer<DrinkTypeViewModel>(
+                                  builder: (context, vm, child) {
+                                  switch (vm.response.status) {
+                                    case Status.loading || Status.initial:
+                                      return const Center(
+                                          child: CircularProgressIndicator
+                                              .adaptive());
+                                    case Status.completed:
+                                      _carouselIndex =
+                                          (Provider.of<DrinkTypeViewModel>(
+                                                          context,
+                                                          listen: false)
+                                                      .drinkTypeList!
+                                                      .length /
+                                                  2)
+                                              .floor();
 
-                                return Column(
+                                      return Column(
+                                        children: [
+                                          AnimatedCarousel(
+                                            onCarouselIndexChanged: (value) =>
+                                                _carouselIndex = value,
+                                          ),
+                                          const SizedBox(height: 20),
+                                          Container(
+                                            width: double.infinity,
+                                            padding: const EdgeInsets.only(
+                                                left: 20.0),
+                                            child: Text(
+                                              'name'.i18n(),
+                                              style: AppTheme.themeData
+                                                  .textTheme.bodySmall!
+                                                  .copyWith(
+                                                fontStyle: FontStyle.italic,
+                                              ),
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 20.0, right: 20),
+                                            child: Form(
+                                              key: formKey,
+                                              child: StyledTextfield(
+                                                controller: nameController,
+                                                validator: (String value) {
+                                                  if (value.isEmpty ||
+                                                      value == '') {
+                                                    return 'mandatory_field'
+                                                        .i18n();
+                                                  }
+                                                },
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      );
+
+                                    case Status.error:
+                                      return StyledError(
+                                          message: '${vm.response.message}');
+                                  }
+                                })
+                              : Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    AnimatedCarousel(
-                                      onCarouselIndexChanged: (value) =>
-                                          _carouselIndex = value,
-                                    ),
-                                    const SizedBox(height: 20),
-                                    Container(
-                                      width: double.infinity,
-                                      padding:
-                                          const EdgeInsets.only(left: 20.0),
-                                      child: Text(
-                                        'name'.i18n(),
-                                        style: AppTheme
-                                            .themeData.textTheme.bodySmall!
-                                            .copyWith(
-                                          fontStyle: FontStyle.italic,
+                                    const SizedBox(height: 50),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        const Icon(
+                                          CommunityMaterialIcons
+                                              .emoticon_confused_outline,
+                                          size: 60,
                                         ),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 20.0, right: 20),
-                                      child: Form(
-                                        key: formKey,
-                                        child: StyledTextfield(
-                                          controller: nameController,
-                                          validator: (String value) {
-                                            if (value.isEmpty || value == '') {
-                                              return 'mandatory_field'.i18n();
-                                            }
-                                          },
+                                        const SizedBox(width: 20),
+                                        Text(
+                                          'Creation Not\nAllowed'.i18n(),
+                                          style: AppTheme.themeData.textTheme
+                                              .headlineMedium!
+                                              .copyWith(color: Colors.white),
+                                          textAlign: TextAlign.center,
                                         ),
-                                      ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 50),
+                                    Text(
+                                      'Please Login To Create\nYour Own Recipe!'
+                                          .i18n(),
+                                      style: AppTheme
+                                          .themeData.textTheme.headlineMedium!
+                                          .copyWith(color: Colors.white),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    const SizedBox(height: 50),
+                                    StyledButton(
+                                      title: 'login'.i18n(),
+                                      color: Colors.white,
+                                      onButtonPressed: () {
+                                        sharedPreferences!
+                                            .setBool('isFirstStart', true)
+                                            .then((value) =>
+                                                AutoRouter.of(context)
+                                                    .pushAndPopUntil(
+                                                  const WelcomeViewRoute(),
+                                                  predicate: (route) => false,
+                                                ));
+                                      },
                                     ),
                                   ],
-                                );
-
-                              case Status.error:
-                                return StyledError(
-                                    message: '${vm.response.message}');
-                            }
-                          }),
+                                ),
                           const SizedBox(height: 15),
                         ],
                       );
@@ -184,14 +238,16 @@ class _YourCreationViewState extends State<YourCreationView> {
               ],
             ),
           ),
-          Container(
-            alignment: Alignment.bottomCenter,
-            padding: const EdgeInsets.only(bottom: 12),
-            child: StyledButton(
-              title: 'create'.i18n(),
-              onButtonPressed: () => onCreatePressed(context),
-            ),
-          ),
+          sharedPreferences!.getBool('loginActive') ?? false
+              ? Container(
+                  alignment: Alignment.bottomCenter,
+                  padding: const EdgeInsets.only(bottom: 12),
+                  child: StyledButton(
+                    title: 'create'.i18n(),
+                    onButtonPressed: () => onCreatePressed(context),
+                  ),
+                )
+              : const SizedBox(),
         ],
       ),
     );

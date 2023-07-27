@@ -69,7 +69,7 @@ class CocktailCard extends StatelessWidget {
                         size: 15,
                       ),
                       Text(
-                        recipe.userName,
+                        recipe.user.username,
                         style: AppTheme.themeData.textTheme.bodySmall!
                             .copyWith(fontSize: 15),
                       ),

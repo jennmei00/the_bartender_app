@@ -7,12 +7,14 @@ enum DrawerView {
   yourCreation,
   newsAndEvents,
   contact,
+  settings,
 }
 
-Map<DrawerView, PageRouteInfo> drawerViewMap  = {
+Map<DrawerView, PageRouteInfo> drawerViewMap = {
   DrawerView.home: const HomeViewRoute(),
-  DrawerView.recipes: RecipeViewRoute(),
-  DrawerView.yourCreation: YourCreationViewRoute(),
+  DrawerView.recipes: const RecipeViewRoute(),
+  DrawerView.yourCreation: const YourCreationViewRoute(),
   DrawerView.newsAndEvents: const NewsAndEventsViewRoute(),
   DrawerView.contact: const ContactViewRoute(),
+  DrawerView.settings: SettingsViewRoute(),
 };

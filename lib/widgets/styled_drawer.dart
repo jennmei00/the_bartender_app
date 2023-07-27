@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:localization/localization.dart';
 import 'package:provider/provider.dart';
 import 'package:the_bartender_app/res/style/app_theme.dart';
+import 'package:the_bartender_app/utils/globals.dart';
 
 import 'package:the_bartender_app/utils/route_util.dart';
 import 'package:the_bartender_app/utils/string_util.dart';
@@ -72,7 +73,7 @@ class StyledDrawer extends StatelessWidget {
         .toList();
   }
 
-  onTapPressed(BuildContext context, DrawerView val) {
+  onTapPressed(BuildContext context, DrawerView val)  {
     //*closes the Drawer when navigation to another view
     AutoRouter.of(context).pop();
     AutoRouter.of(context).popAndPush(drawerViewMap[val]!);
@@ -88,12 +89,15 @@ class StyledDrawer extends StatelessWidget {
       if (drinkTypeVM.drinkTypeList == null) {
         drinkTypeVM.fetchData();
       }
-    } else if (val == DrawerView.recipes) {
-      DrinkTypeViewModel drinkTypeVM =
-          Provider.of<DrinkTypeViewModel>(context, listen: false);
-      if (drinkTypeVM.drinkTypeList == null) {
-        drinkTypeVM.fetchData();
-      }
+    } else if (val == DrawerView.yourCreation) {
+        if (sharedPreferences!.getBool('loginActive') ?? false) {
+          DrinkTypeViewModel drinkTypeVM =
+              Provider.of<DrinkTypeViewModel>(context, listen: false);
+          if (drinkTypeVM.drinkTypeList == null) {
+            drinkTypeVM.fetchData();
+          }
+        }
+      
     }
   }
 }
