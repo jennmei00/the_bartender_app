@@ -13,6 +13,10 @@ class StyledTextfield extends StatelessWidget {
   final bool enabled;
   final bool onlyInteger;
   final bool obscureText;
+  final Function? onTapOutside;
+  final Function? onChanged;
+
+  final FocusNode? focusNode;
 
   const StyledTextfield({
     super.key,
@@ -26,6 +30,9 @@ class StyledTextfield extends StatelessWidget {
     this.enabled = true,
     this.onlyInteger = false,
     this.obscureText = false,
+    this.onTapOutside,
+    this.focusNode,
+    this.onChanged,
   });
 
   final OutlineInputBorder _outlineInputBorder = const OutlineInputBorder(
@@ -39,6 +46,7 @@ class StyledTextfield extends StatelessWidget {
       height: textInputType == TextInputType.multiline ? null : height,
       width: width,
       child: TextFormField(
+        focusNode: focusNode,
         obscureText: obscureText,
         inputFormatters: onlyInteger
             ? <TextInputFormatter>[
@@ -46,6 +54,10 @@ class StyledTextfield extends StatelessWidget {
               ]
             : null,
         enabled: enabled,
+        onTapOutside: onTapOutside == null
+            ? null
+            : (_) => focusNode?.hasFocus ?? false ? onTapOutside!() : null,
+        onChanged: onChanged == null ? null : (value) => onChanged!(),
         validator: validator == null ? null : (value) => validator!(value),
         style: AppTheme.themeData.textTheme.bodyMedium,
         controller: controller,

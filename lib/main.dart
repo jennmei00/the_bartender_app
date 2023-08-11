@@ -7,6 +7,7 @@ import 'package:the_bartender_app/res/style/app_theme.dart';
 import 'package:the_bartender_app/utils/globals.dart';
 import 'package:the_bartender_app/utils/routes/router.gr.dart';
 import 'package:the_bartender_app/viewmodels/drink_type_view_model.dart';
+import 'package:the_bartender_app/viewmodels/recipe_create_view_model.dart';
 import 'package:the_bartender_app/viewmodels/season_view_model.dart';
 import 'package:the_bartender_app/viewmodels/recipe_detail_view_model.dart';
 import 'package:the_bartender_app/viewmodels/recipe_view_model.dart';
@@ -34,8 +35,8 @@ class MyApp extends StatelessWidget {
       precacheImage(AppTheme.woodBackgroundImage, context);
     });
 
-    //TODODelete this row 
-      // prefs.setBool('isFirstStart', true);
+    //TODODelete this row
+    // prefs.setBool('isFirstStart', true);
 
     return MultiProvider(
       providers: [
@@ -46,6 +47,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider.value(value: ToolViewModel()),
         ChangeNotifierProvider.value(value: UnitViewModel()),
         ChangeNotifierProvider.value(value: UserViewModel()),
+        ChangeNotifierProvider.value(value: RecipeCreateViewModel()),
       ],
       child: MaterialApp.router(
         title: 'The Bartender',

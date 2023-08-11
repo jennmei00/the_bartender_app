@@ -34,7 +34,7 @@ class StyledDropDown extends StatelessWidget {
         child: Padding(
             padding: const EdgeInsets.only(left: 10, right: 10),
             child: DropdownButton(
-              value: seasonDropDown ? season! : unit!,
+              value: seasonDropDown ? season : unit,
               items: seasonDropDown
                   ? seasonList
                       .map((e) => DropdownMenuItem(

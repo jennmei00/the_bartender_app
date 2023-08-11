@@ -183,8 +183,9 @@ class Recipe {
     result.addAll({'name': name});
     result.addAll({'rating': rating});
     result.addAll({'alcoholic': alcoholic});
-    result.addAll({'user': user.toMap()});
-    result.addAll({'season': season.toMap()});
+    result.addAll({'user_id': user.id});
+    result.addAll({'season_id': season.id});
+    result.addAll({'creation_date': DateTime.now().toIso8601String()});
 
     return result;
   }

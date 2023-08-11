@@ -49,5 +49,7 @@
     "password": "Passwort",
     "wrong_login": "Falscher Benutzername oder Passwort",
     "something_went_wrong": "Etwas ist schiefgelaufen",
-    "settings": "Einstellungen"
+    "settings": "Einstellungen",
+    "creation_not_allowed": "Erstellung Nicht\nErlaubt",
+    "please_login_text": "Bitte Anmelden Um Ein\nEigenes Rezept Zu Erstellen"
 }

@@ -68,6 +68,9 @@ class _YourCreationViewState extends State<YourCreationView> {
 
       AutoRouter.of(context)
           .push(YourCreationDetailViewRoute(drinkType: drinkType, name: name));
+
+      nameController.text = '';
+      FocusScope.of(context).requestFocus(FocusNode());
     }
   }
 
@@ -105,7 +108,7 @@ class _YourCreationViewState extends State<YourCreationView> {
                           const SizedBox(height: 20),
                           SvgPicture.asset(
                             'assets/svg/neon_create.svg',
-                            width: MediaQuery.of(context).size.width * 0.50,
+                            width: MediaQuery.of(context).size.width * 0.70,
                           ),
                           Container(
                             padding: const EdgeInsets.all(25),
@@ -194,7 +197,7 @@ class _YourCreationViewState extends State<YourCreationView> {
                                         ),
                                         const SizedBox(width: 20),
                                         Text(
-                                          'Creation Not\nAllowed'.i18n(),
+                                          'creation_not_allowed'.i18n(),
                                           style: AppTheme.themeData.textTheme
                                               .headlineMedium!
                                               .copyWith(color: Colors.white),
@@ -204,8 +207,7 @@ class _YourCreationViewState extends State<YourCreationView> {
                                     ),
                                     const SizedBox(height: 50),
                                     Text(
-                                      'Please Login To Create\nYour Own Recipe!'
-                                          .i18n(),
+                                      'please_login_text'.i18n(),
                                       style: AppTheme
                                           .themeData.textTheme.headlineMedium!
                                           .copyWith(color: Colors.white),

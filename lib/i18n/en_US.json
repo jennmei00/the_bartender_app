@@ -49,5 +49,7 @@
     "password": "Password",
     "wrong_login": "Wrong username or password",
     "something_went_wrong": "Something went wrong",
-    "settings": "Settings"
+    "settings": "Settings",
+    "creation_not_allowed": "Creation Not\nAllowed",
+    "please_login_text": "Please Login To Create\nYour Own Recipe!"
 }
