@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:the_bartender_app/models/drink_type.dart';
 import 'package:the_bartender_app/res/style/app_theme.dart';
 
@@ -24,8 +23,12 @@ class CocktailImageWidget extends StatelessWidget {
               alignment: Alignment.center,
               height: 150,
               width: 150,
-              child: SvgPicture.asset(
-                'assets/svg/cocktail.svg',
+              child: Image.asset(
+                drinkType.name == 'Cocktail'
+                    ? 'assets/images/cocktail.png'
+                    : drinkType.name == 'Shot'
+                        ? 'assets/images/shot.png'
+                        : 'assets/images/other.png',
                 height: 150,
               ),
             ),

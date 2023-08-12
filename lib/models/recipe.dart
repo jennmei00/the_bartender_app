@@ -148,6 +148,7 @@ class Recipe {
   bool alcoholic;
   User user;
   Season season;
+  DrinkType drinkType;
   //TODOImage
   Recipe({
     required this.id,
@@ -156,6 +157,7 @@ class Recipe {
     required this.alcoholic,
     required this.user,
     required this.season,
+    required this.drinkType,
   });
 
   Recipe copyWith({
@@ -165,6 +167,7 @@ class Recipe {
     bool? alcoholic,
     User? user,
     Season? season,
+    DrinkType? drinkType,
   }) {
     return Recipe(
       id: id ?? this.id,
@@ -173,21 +176,8 @@ class Recipe {
       alcoholic: alcoholic ?? this.alcoholic,
       user: user ?? this.user,
       season: season ?? this.season,
+      drinkType: drinkType ?? this.drinkType,
     );
-  }
-
-  Map<String, dynamic> toMap() {
-    final result = <String, dynamic>{};
-
-    result.addAll({'recipe_id': id});
-    result.addAll({'name': name});
-    result.addAll({'rating': rating});
-    result.addAll({'alcoholic': alcoholic});
-    result.addAll({'user_id': user.id});
-    result.addAll({'season_id': season.id});
-    result.addAll({'creation_date': DateTime.now().toIso8601String()});
-
-    return result;
   }
 
   factory Recipe.fromMap(Map<String, dynamic> map) {
@@ -198,10 +188,9 @@ class Recipe {
       alcoholic: map['alcoholic'] ?? false,
       user: User.fromMap(map['user']),
       season: Season.fromMap(map['season']),
+      drinkType: DrinkType.fromMap(map['drink_type']),
     );
   }
-
-  String toJson() => json.encode(toMap());
 
   factory Recipe.fromJson(String source) => Recipe.fromMap(json.decode(source));
 }

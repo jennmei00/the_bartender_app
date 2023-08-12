@@ -1,7 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:the_bartender_app/models/recipe.dart';
 import 'package:the_bartender_app/res/style/app_theme.dart';
@@ -35,8 +34,12 @@ class CocktailCard extends StatelessWidget {
               width: 180,
               child: Column(
                 children: [
-                  SvgPicture.asset(
-                    'assets/svg/cocktail.svg',
+                  Image.asset(
+                    recipe.drinkType.name == 'Cocktail'
+                        ? 'assets/images/cocktail.png'
+                        : recipe.drinkType.name == 'Shot'
+                            ? 'assets/images/shot.png'
+                            : 'assets/images/other.png',
                     height: 100,
                     alignment: Alignment.center,
                   ),
@@ -51,9 +54,12 @@ class CocktailCard extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        recipe.season.name == 'summer'
+                        recipe.season.name == 'Summer'
                             ? const Icon(CommunityMaterialIcons.weather_sunny)
-                            : const Icon(CommunityMaterialIcons.snowflake),
+                            : recipe.season.name == 'Winter'
+                                ? const Icon(CommunityMaterialIcons.snowflake)
+                                : const Icon(CommunityMaterialIcons
+                                    .weather_partly_snowy),
                         recipe.alcoholic
                             ? const Icon(CommunityMaterialIcons.glass_cocktail)
                             : const Icon(

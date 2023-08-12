@@ -15,11 +15,8 @@ class AppTheme {
 
   static const AssetImage backgroundImage =
       AssetImage('assets/images/background.jpg');
-  //TODOAttribute for the picture
-  //How to attribute? Paste link in description or in app
-  //"https://www.freepik.com/free-photo/brown-wooden-flooring_4246371.htm#query=wood%20background&position=0&from_view=keyword&track=ais" => Image by rawpixel.com on Freepik
   static const AssetImage woodBackgroundImage =
-      AssetImage('assets/images/wood_background.jpg');
+      AssetImage('assets/images/background_wood.png');
   static final ImageFilter backgroundImageFilter =
       ImageFilter.blur(sigmaX: 0.7, sigmaY: 0.7);
 

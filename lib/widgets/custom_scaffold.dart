@@ -27,6 +27,7 @@ class CustomScaffold extends StatelessWidget {
             image: DecorationImage(
           image: image,
           fit: BoxFit.cover,
+          colorFilter: const ColorFilter.mode(Colors.black54, BlendMode.softLight)
         )),
         child: BackdropFilter(
           filter: AppTheme.backgroundImageFilter,

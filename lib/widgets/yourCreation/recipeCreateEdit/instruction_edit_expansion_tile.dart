@@ -69,7 +69,6 @@ class _InstructionEditExpansionTileState
                       widget.update(instruction: instructionController.text),
                       focusNode: focusNode,
                   validator: (value) {
-                    print('VALUE:' + value);
                     if (value == '') {
                       setState(() {
                         isValide = false;
