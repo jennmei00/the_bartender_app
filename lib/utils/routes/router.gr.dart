@@ -77,11 +77,13 @@ class AppRouter extends _i11.RootStackRouter {
       );
     },
     RecipeDetailViewRoute.name: (routeData) {
-      final args = routeData.argsAs<RecipeDetailViewRouteArgs>(
-          orElse: () => const RecipeDetailViewRouteArgs());
+      final args = routeData.argsAs<RecipeDetailViewRouteArgs>();
       return _i11.MaterialPageX<dynamic>(
         routeData: routeData,
-        child: _i8.RecipeDetailView(key: args.key),
+        child: _i8.RecipeDetailView(
+          key: args.key,
+          recipeName: args.recipeName,
+        ),
       );
     },
     YourCreationDetailViewRoute.name: (routeData) {
@@ -251,24 +253,34 @@ class RecipeSearchResultViewRouteArgs {
 /// [_i8.RecipeDetailView]
 class RecipeDetailViewRoute
     extends _i11.PageRouteInfo<RecipeDetailViewRouteArgs> {
-  RecipeDetailViewRoute({_i12.Key? key})
-      : super(
+  RecipeDetailViewRoute({
+    _i12.Key? key,
+    required String recipeName,
+  }) : super(
           RecipeDetailViewRoute.name,
           path: '/recipe-detail-view',
-          args: RecipeDetailViewRouteArgs(key: key),
+          args: RecipeDetailViewRouteArgs(
+            key: key,
+            recipeName: recipeName,
+          ),
         );
 
   static const String name = 'RecipeDetailViewRoute';
 }
 
 class RecipeDetailViewRouteArgs {
-  const RecipeDetailViewRouteArgs({this.key});
+  const RecipeDetailViewRouteArgs({
+    this.key,
+    required this.recipeName,
+  });
 
   final _i12.Key? key;
 
+  final String recipeName;
+
   @override
   String toString() {
-    return 'RecipeDetailViewRouteArgs{key: $key}';
+    return 'RecipeDetailViewRouteArgs{key: $key, recipeName: $recipeName}';
   }
 }
 

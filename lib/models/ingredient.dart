@@ -5,20 +5,20 @@ import 'package:the_bartender_app/models/unit.dart';
 class Ingredient {
   String id;
   String name;
-  Unit unit;
-  int amount;
+  Unit? unit;
+  double? amount;
   Ingredient({
     required this.id,
     required this.name,
-    required this.unit,
-    required this.amount,
+    this.unit,
+    this.amount,
   });
 
   Ingredient copyWith({
     String? id,
     String? name,
     Unit? unit,
-    int? amount,
+    double? amount,
   }) {
     return Ingredient(
       id: id ?? this.id,
@@ -33,7 +33,7 @@ class Ingredient {
 
     result.addAll({'ingredient_id': id});
     result.addAll({'name': name});
-    result.addAll({'unit': unit.toMap()});
+    result.addAll({'unit': unit?.toMap()});
     result.addAll({'amount': amount});
 
     return result;
@@ -43,10 +43,8 @@ class Ingredient {
     return Ingredient(
       id: map['ingredient_id'] ?? '',
       name: map['name'] ?? '',
-      unit: map['unit'] != null
-          ? Unit.fromMap(map['unit'])
-          : Unit(id: '', name: ''),
-      amount: map['amount']?.toInt() ?? 0,
+      unit: map['unit'] != null ? Unit.fromMap(map['unit']) : null,
+      amount: map['amount'],
     );
   }
 
@@ -82,8 +80,6 @@ class IngredientCreate {
 
     return result;
   }
-
-
 
   factory IngredientCreate.fromIngredient(Ingredient ingredient) {
     return IngredientCreate(id: ingredient.id, name: ingredient.id);

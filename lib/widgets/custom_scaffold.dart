@@ -10,13 +10,16 @@ class CustomScaffold extends StatelessWidget {
   final AssetImage image;
   final bool appBar;
   final Widget? title;
-  const CustomScaffold(
-      {super.key,
-      required this.body,
-      required this.drawerView,
-      required this.image,
-      this.appBar = false,
-      this.title});
+  final bool drawer;
+  const CustomScaffold({
+    super.key,
+    required this.body,
+    required this.drawerView,
+    required this.image,
+    this.appBar = false,
+    this.title,
+    this.drawer = true,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -25,10 +28,10 @@ class CustomScaffold extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
             image: DecorationImage(
-          image: image,
-          fit: BoxFit.cover,
-          colorFilter: const ColorFilter.mode(Colors.black54, BlendMode.softLight)
-        )),
+                image: image,
+                fit: BoxFit.cover,
+                colorFilter: const ColorFilter.mode(
+                    Colors.black54, BlendMode.softLight))),
         child: BackdropFilter(
           filter: AppTheme.backgroundImageFilter,
           child: SafeArea(
@@ -37,9 +40,12 @@ class CustomScaffold extends StatelessWidget {
                   ? AppBar(
                       leading: Builder(builder: (context) {
                         return IconButton(
-                          icon:
-                              const Icon(CommunityMaterialIcons.dots_vertical),
-                          onPressed: () => Scaffold.of(context).openDrawer(),
+                          icon: drawer
+                              ? const Icon(CommunityMaterialIcons.dots_vertical)
+                              : const Icon(CommunityMaterialIcons.close),
+                          onPressed: () => drawer
+                              ? Scaffold.of(context).openDrawer()
+                              : Navigator.of(context).pop(),
                         );
                       }),
                       title: title != null

@@ -48,6 +48,7 @@ dependencies:
   card_swiper: ^2.0.4
   uuid: ^3.0.7
   shared_preferences: ^2.2.0
+  duration_picker: ^1.1.1
 
 dev_dependencies:
   flutter_test:

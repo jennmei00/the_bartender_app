@@ -83,6 +83,7 @@ class GeneralService extends BaseService {
       //* Check if Ingredients exists
       //* If it not exists, then post new ingredient
       //* If it exists, then replace ingredient id with existing id
+      List<Ingredient> addIngredientList = [];
       for (final element in ingredientList) {
         final response = await http.get(
             Uri.parse('${baseUrl}ingredient?name=eq.${element.name}'),
@@ -105,31 +106,31 @@ class GeneralService extends BaseService {
               'name': element.name,
             }),
           );
+          addIngredientList.add(element);
         } else {
-          ingredientList[
-                  ingredientList.indexWhere((element) => element == element)]
-              .id = returnResponse(response).first['ingredient_id'];
+          addIngredientList.add(
+              Ingredient.fromMap(returnResponse(response).first)
+                  .copyWith(unit: element.unit, amount: element.amount));
         }
-
-        //* Post Recipe2Ingredient
-        await http.post(
-          Uri.parse('${baseUrl}recipe2ingredient'),
-          headers: {
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.authorizationHeader:
-                'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoidGhlX2JhcnRlbmRlciJ9.rBZOey3_D5-A05DRRQD8IDLYXfHhtQjAg0u-g4zQ_XU'
-          },
-          body: jsonEncode(ingredientList
-              .map((e) => {
-                    "recipe2ingredient_id": const Uuid().v4(),
-                    "recipe_id": recipe.recipeId,
-                    "ingredient_id": e.id,
-                    "unit_id": e.unit.id,
-                    "amount": e.amount,
-                  })
-              .toList()),
-        );
       }
+      //* Post Recipe2Ingredient
+      await http.post(
+        Uri.parse('${baseUrl}recipe2ingredient'),
+        headers: {
+          HttpHeaders.contentTypeHeader: 'application/json',
+          HttpHeaders.authorizationHeader:
+              'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoidGhlX2JhcnRlbmRlciJ9.rBZOey3_D5-A05DRRQD8IDLYXfHhtQjAg0u-g4zQ_XU'
+        },
+        body: jsonEncode(addIngredientList
+            .map((e) => {
+                  "recipe2ingredient_id": const Uuid().v4(),
+                  "recipe_id": recipe.recipeId,
+                  "ingredient_id": e.id,
+                  "unit_id": e.unit?.id,
+                  "amount": e.amount,
+                })
+            .toList()),
+      );
     } on SocketException {
       throw FetchDataException('no_internet_connection'.i18n());
     }

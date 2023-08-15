@@ -8,10 +8,10 @@ class AppTheme {
 
   static final Color _primaryColor = HexColor('BC9635');
   static final Color secondaryColor = HexColor('F0DBA4');
-  static const Color _errorColor = Colors.red; //HexColor('F0DBA4');
+  static final Color _errorColor = HexColor('FF5656');
   static final Color _elevatedButtonBackgroundColor = HexColor('484040');
   static final Color normalCardBackgroundcolor = HexColor('484040').withOpacity(0.4);
-  static final Color _drawerBackgroundcolor = HexColor('32241F');
+  static final Color drawerBackgroundcolor = HexColor('32241F');
 
   static const AssetImage backgroundImage =
       AssetImage('assets/images/background.jpg');
@@ -114,7 +114,7 @@ class AppTheme {
       ),
     ),
     drawerTheme: DrawerThemeData(
-      backgroundColor: _drawerBackgroundcolor.withOpacity(0.90),
+      backgroundColor: drawerBackgroundcolor.withOpacity(0.90),
       width: 240,
     ),
     dividerTheme: DividerThemeData(

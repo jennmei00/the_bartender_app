@@ -98,6 +98,6 @@ class CocktailCard extends StatelessWidget {
           .fetchRecipeData(recipe.id);
     }
 
-    AutoRouter.of(context).push(RecipeDetailViewRoute());
+    AutoRouter.of(context).push(RecipeDetailViewRoute(recipeName: recipe.name));
   }
 }

@@ -1,5 +1,3 @@
-import 'package:auto_route/auto_route.dart';
-import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:localization/localization.dart';
 import 'package:provider/provider.dart';
@@ -19,9 +17,9 @@ import 'package:the_bartender_app/viewmodels/tool_view_model.dart';
 import 'package:the_bartender_app/viewmodels/unit_view_model.dart';
 import 'package:the_bartender_app/widgets/cocktail_image_widget.dart';
 import 'package:the_bartender_app/widgets/custom_scaffold.dart';
-import 'package:the_bartender_app/widgets/yourCreation/recipeCreateEdit/information_edit_expansion_tile.dart';
-import 'package:the_bartender_app/widgets/yourCreation/recipeCreateEdit/ingredient_edit_expansion_tile.dart';
-import 'package:the_bartender_app/widgets/yourCreation/recipeCreateEdit/instruction_edit_expansion_tile.dart';
+import 'package:the_bartender_app/widgets/yourCreation/recipeCreateEdit/information_edit_card.dart';
+import 'package:the_bartender_app/widgets/yourCreation/recipeCreateEdit/ingredient_edit_card.dart';
+import 'package:the_bartender_app/widgets/yourCreation/recipeCreateEdit/instruction_edit_card.dart';
 import 'package:the_bartender_app/widgets/styled_button.dart';
 import 'package:the_bartender_app/widgets/styled_error.dart';
 import 'package:uuid/uuid.dart';
@@ -38,7 +36,7 @@ class YourCreationDetailView extends StatefulWidget {
 }
 
 class _YourCreationDetailViewState extends State<YourCreationDetailView> {
-  int? prepTime;
+  int prepTime = 1;
   Season? selectedSeason;
   List<Tool>? selectedTools;
   bool alcoholic = true;
@@ -47,7 +45,6 @@ class _YourCreationDetailViewState extends State<YourCreationDetailView> {
   final GlobalKey<FormState> informationFormKey = GlobalKey<FormState>();
   final GlobalKey<FormState> ingredientsFormKey = GlobalKey<FormState>();
   final GlobalKey<FormState> instructionsFormKey = GlobalKey<FormState>();
-  bool isInformationValide = false;
   bool isIngredientsValide = false;
   bool isInstructionValide = false;
 
@@ -66,6 +63,9 @@ class _YourCreationDetailViewState extends State<YourCreationDetailView> {
 
   void ingredientsCallback({List<Ingredient>? ingredientList}) {
     ingredients = ingredientList;
+    if (!isIngredientsValide) {
+      ingredientsFormKey.currentState!.validate();
+    }
   }
 
   void instructionsCallback({String? instruction}) {
@@ -75,16 +75,13 @@ class _YourCreationDetailViewState extends State<YourCreationDetailView> {
   onSavePressed(BuildContext context) {
     FocusScope.of(context).requestFocus(FocusNode());
 
-    if (informationFormKey.currentState!.validate()) {
-      isInformationValide = true;
-    }
     if (ingredientsFormKey.currentState!.validate()) {
       isIngredientsValide = true;
     }
     if (instructionsFormKey.currentState!.validate()) {
       isInstructionValide = true;
     }
-    if (isInformationValide && isInformationValide && isInformationValide) {
+    if (isIngredientsValide && isInstructionValide) {
       User user =
           User(id: sharedPreferences!.getString('UserID') ?? '', username: '');
       RecipeCreate recipe = RecipeCreate(
@@ -92,7 +89,7 @@ class _YourCreationDetailViewState extends State<YourCreationDetailView> {
         name: widget.name,
         creationDate: DateTime.now(),
         editDate: null,
-        prepTimeMinutes: prepTime!,
+        prepTimeMinutes: prepTime,
         alcoholic: alcoholic,
         instruction: instructions!,
         description: '',
@@ -140,86 +137,50 @@ class _YourCreationDetailViewState extends State<YourCreationDetailView> {
   Widget build(BuildContext context) {
     return CustomScaffold(
       image: AppTheme.woodBackgroundImage,
-      drawerView: DrawerView.recipes,
-      body: Column(
-        children: [
-          Expanded(
-            child: CustomScrollView(
-              physics: const BouncingScrollPhysics(),
-              key: GlobalKey(),
-              slivers: [
-                SliverAppBar(
-                  title: Padding(
-                    padding: const EdgeInsets.only(top: 8, bottom: 0),
-                    child: Text(
-                      'your_creation'.i18n().toUpperCase(),
+      drawerView: DrawerView.yourCreation,
+      appBar: true,
+      drawer: false,
+      title: Text(widget.name),
+      body: OrientationBuilder(builder: (context, orientation) {
+        return Column(
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                child: Column(
+                  children: [
+                    CocktailImageWidget(
+                      name: widget.name,
+                      drinkType: widget.drinkType,
+                      isCreation: true,
                     ),
-                  ),
-                  leading: Builder(builder: (context) {
-                    return IconButton(
-                      icon: const Icon(CommunityMaterialIcons.close),
-                      onPressed: () => AutoRouter.of(context).pop(),
-                    );
-                  }),
-                  actions: [
-                    IconButton(
-                      onPressed: Provider.of<SeasonViewModel>(context)
-                                  .response
-                                  .status !=
-                              Status.completed
-                          ? null
-                          : () => onSavePressed(context),
-                      icon: const Icon(
-                        CommunityMaterialIcons.content_save,
-                      ),
-                      color: Colors.white,
-                      disabledColor: Colors.grey,
-                    )
+                    const SizedBox(height: 20),
+                    Consumer3<SeasonViewModel, ToolViewModel, UnitViewModel>(
+                        builder: (context, seasonVM, toolVM, unitVM, child) =>
+                            getCreationEditWidgets(seasonVM, toolVM, unitVM)),
+                    const SizedBox(height: 30),
                   ],
                 ),
-                SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                    (context, index) => Column(
-                      children: [
-                        CocktailImageWidget(
-                            name: widget.name, drinkType: widget.drinkType),
-                        Text(
-                          'recipe_detail_text'.i18n(),
-                          style: AppTheme.themeData.textTheme.displayMedium,
-                          textAlign: TextAlign.center,
-                        ),
-                        const SizedBox(height: 20),
-                        Consumer3<SeasonViewModel, ToolViewModel,
-                                UnitViewModel>(
-                            builder:
-                                (context, seasonVM, toolVM, unitVM, child) =>
-                                    getCreationEditWidgets(
-                                        seasonVM, toolVM, unitVM)),
-                        const SizedBox(height: 30),
-                      ],
-                    ),
-                    childCount: 1,
-                  ),
-                ),
-              ],
+              ),
             ),
-          ),
-          Container(
-            alignment: Alignment.bottomCenter,
-            padding: const EdgeInsets.only(bottom: 12),
-            child: StyledButton(
-              title: 'save'.i18n(),
-              onButtonPressed:
-                  Provider.of<SeasonViewModel>(context).response.status !=
-                              Status.completed ||
-                          Provider.of<ToolViewModel>(context).response.status !=
-                              Status.completed
-                      ? null
-                      : () => onSavePressed(context),
+            Container(
+              alignment: Alignment.bottomCenter,
+              padding: const EdgeInsets.only(bottom: 12),
+              child: StyledButton(
+                title: 'save'.i18n(),
+                onButtonPressed: Provider.of<SeasonViewModel>(context)
+                                .response
+                                .status !=
+                            Status.completed ||
+                        Provider.of<ToolViewModel>(context).response.status !=
+                            Status.completed
+                    ? null
+                    : () => onSavePressed(context),
+              ),
             ),
-          ),
-        ],
-      ),
+          ],
+        );
+      }),
     );
   }
 
@@ -236,17 +197,17 @@ class _YourCreationDetailViewState extends State<YourCreationDetailView> {
         unitVM.response.status == Status.completed) {
       return Column(
         children: [
-          InformationEditExpansionTile(
+          InformationEditCard(
             update: informationCallback,
             formKey: informationFormKey,
           ),
           const Divider(),
-          IngredientEditExpansionTile(
+          IngredientEditCard(
             update: ingredientsCallback,
             formKey: ingredientsFormKey,
           ),
           const Divider(),
-          InstructionEditExpansionTile(
+          InstructionEditCard(
             update: instructionsCallback,
             formKey: instructionsFormKey,
           ),

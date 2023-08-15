@@ -25,14 +25,13 @@ class StyledDropDown extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        height: 40,
+        margin: const EdgeInsets.only(bottom: 5),
         decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(5.0),
           color: AppTheme.styledTextFieldColor.withOpacity(0.6),
-          border: Border.all(color: Colors.white, width: 3),
-          borderRadius: BorderRadius.circular(15),
         ),
         child: Padding(
-            padding: const EdgeInsets.only(left: 10, right: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 10.0),
             child: DropdownButton(
               value: seasonDropDown ? season : unit,
               items: seasonDropDown
@@ -51,9 +50,12 @@ class StyledDropDown extends StatelessWidget {
                           ))
                       .toList(),
               onChanged: (value) => onChanged(value),
-              icon: const Padding(
-                  padding: EdgeInsets.only(left: 20),
-                  child: Icon(CommunityMaterialIcons.chevron_down)),
+              icon: Padding(
+                  padding: const EdgeInsets.only(right: 10),
+                  child: Icon(
+                    CommunityMaterialIcons.chevron_down,
+                    color: AppTheme.secondaryColor,
+                  )),
               style: AppTheme.themeData.textTheme.bodyMedium,
               underline: Container(),
               isExpanded: true,

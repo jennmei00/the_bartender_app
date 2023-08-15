@@ -1,53 +1,46 @@
 import 'package:flutter/material.dart';
+import 'package:localization/localization.dart';
 import 'package:the_bartender_app/models/drink_type.dart';
 import 'package:the_bartender_app/res/style/app_theme.dart';
 
 class CocktailImageWidget extends StatelessWidget {
   final String name;
   final DrinkType drinkType;
-  const CocktailImageWidget(
-      {super.key, required this.name, required this.drinkType});
+  final bool isCreation;
+  const CocktailImageWidget({
+    super.key,
+    required this.name,
+    required this.drinkType,
+    this.isCreation = false,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Text(
-          name,
-          style: AppTheme.themeData.textTheme.titleLarge,
-          textAlign: TextAlign.center,
-        ),
-        Stack(
-          children: [
-            Container(
-              alignment: Alignment.center,
-              height: 150,
-              width: 150,
-              child: Image.asset(
-                drinkType.name == 'Cocktail'
-                    ? 'assets/images/cocktail.png'
-                    : drinkType.name == 'Shot'
-                        ? 'assets/images/shot.png'
-                        : 'assets/images/other.png',
-                height: 150,
-              ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 8.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Flexible(
+            child: Text(
+              isCreation
+                  ? 'recipe_detail_text'.i18n()
+                  : 'General Useful Informations For Your Drink',
+              style: AppTheme.themeData.textTheme.displayMedium,
+              textAlign: TextAlign.center,
+              softWrap: true,
             ),
-            Container(
-              height: 160,
-              width: 150,
-              alignment: Alignment.bottomRight,
-              child: Transform.rotate(
-                angle: -0.60,
-                child: Text(
-                  drinkType.name,
-                  style: AppTheme.themeData.textTheme.titleSmall,
-                ),
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 20),
-      ],
+          ),
+          Image.asset(
+            drinkType.name == 'Cocktail'
+                ? 'assets/images/cocktail.png'
+                : drinkType.name == 'Shot'
+                    ? 'assets/images/shot.png'
+                    : 'assets/images/other.png',
+            height: 100,
+          ),
+        ],
+      ),
     );
   }
 }
