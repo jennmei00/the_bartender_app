@@ -28,17 +28,6 @@ class Ingredient {
     );
   }
 
-  Map<String, dynamic> toMap() {
-    final result = <String, dynamic>{};
-
-    result.addAll({'ingredient_id': id});
-    result.addAll({'name': name});
-    result.addAll({'unit': unit?.toMap()});
-    result.addAll({'amount': amount});
-
-    return result;
-  }
-
   factory Ingredient.fromMap(Map<String, dynamic> map) {
     return Ingredient(
       id: map['ingredient_id'] ?? '',
@@ -47,8 +36,6 @@ class Ingredient {
       amount: map['amount'],
     );
   }
-
-  String toJson() => json.encode(toMap());
 
   factory Ingredient.fromJson(String source) =>
       Ingredient.fromMap(json.decode(source));

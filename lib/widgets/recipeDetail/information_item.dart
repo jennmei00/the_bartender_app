@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:the_bartender_app/res/style/app_theme.dart';
 
 class InformationItem extends StatelessWidget {
-  final IconData icon;
+  final Icon icon;
   final String info;
   const InformationItem({super.key, required this.icon, required this.info});
 
@@ -12,7 +12,7 @@ class InformationItem extends StatelessWidget {
       padding: const EdgeInsets.only(top: 8.0),
       child: Row(
         children: [
-          SizedBox(width: 80, child: Icon(icon)),
+          SizedBox(width: 80, child: icon),
           Text(
             info,
             style: AppTheme.themeData.textTheme.bodyMedium,

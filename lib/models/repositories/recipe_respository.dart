@@ -9,7 +9,7 @@ class RecipeRepository {
   Future<List<Recipe>> fetchRecipeList(String searchText,
       {RecipeFilter? recipeFilter}) async {
     String baseURL =
-        'recipe?select=recipe_id,name,rating,alcoholic,user(user_id,username),season(season_id,name),drink_type(drink_type_id, name)&name=ilike.*$searchText*';
+        'recipe?select=recipe_id,name,rating,alcoholic,user(user_id,username),season(season_id,name,name_de),drink_type(drink_type_id, name, name_de)&name=ilike.*$searchText*';
 
     //*Transform filters into PostgREST Statement
     String seasonFilter = '';

@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
+import 'package:localization/localization.dart';
 import 'package:the_bartender_app/data/api/api_response.dart';
 import 'package:the_bartender_app/models/repositories/user_repository.dart';
 import 'package:the_bartender_app/models/user.dart';
@@ -27,7 +28,10 @@ class UserViewModel with ChangeNotifier {
       notifyListeners();
       return user;
     } catch (e) {
-      _apiResponse = ApiResponse.error(e.toString());
+      if (kDebugMode) {
+        print(e);
+      }
+      _apiResponse = ApiResponse.error('something_went_wrong'.i18n());
       notifyListeners();
       return null;
     }

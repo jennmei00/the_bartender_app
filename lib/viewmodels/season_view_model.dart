@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
+import 'package:localization/localization.dart';
 import 'package:the_bartender_app/data/api/api_response.dart';
 import 'package:the_bartender_app/models/repositories/season_repository.dart';
 import 'package:the_bartender_app/models/season.dart';
@@ -26,7 +27,10 @@ class SeasonViewModel with ChangeNotifier {
       setSelctedSeason(seasons);
       _apiResponse = ApiResponse.completed(seasons);
     } catch (e) {
-      _apiResponse = ApiResponse.error(e.toString());
+      if (kDebugMode) {
+        print(e);
+      }
+      _apiResponse = ApiResponse.error('something_went_wrong'.i18n());
     }
     notifyListeners();
   }

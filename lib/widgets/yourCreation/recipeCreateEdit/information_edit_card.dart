@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:the_bartender_app/models/season.dart';
 import 'package:the_bartender_app/models/tool.dart';
 import 'package:the_bartender_app/res/style/app_theme.dart';
+import 'package:the_bartender_app/utils/id_util.dart';
 import 'package:the_bartender_app/utils/string_util.dart';
 import 'package:the_bartender_app/viewmodels/season_view_model.dart';
 import 'package:the_bartender_app/viewmodels/tool_view_model.dart';
@@ -44,29 +45,12 @@ class _InformationEditCardState extends State<InformationEditCard> {
     super.initState();
     seasonList =
         Provider.of<SeasonViewModel>(context, listen: false).seasonList ?? [];
-    // seasonList = [
-    //   Season(id: const Uuid().v4(), name: 'Summer'),
-    //   Season(id: const Uuid().v4(), name: 'Winter'),
-    //   Season(id: const Uuid().v4(), name: 'All Season'),
-    // ];
-    selectedSeason =
-        seasonList.firstWhere((element) => element.name == 'All Season');
+    selectedSeason = seasonList.firstWhere((element) =>
+        element.id == 'a7bedcc8-7be6-42bb-9214-51a2b8067c96'); //*All Season ID
     widget.update(season: selectedSeason);
 
     toolList =
         Provider.of<ToolViewModel>(context, listen: false).toolList ?? [];
-    // toolList = [
-    //   Tool(id: const Uuid().v4(), name: 'Tablespoon'),
-    //   Tool(id: const Uuid().v4(), name: 'Shaker'),
-    //   Tool(id: const Uuid().v4(), name: 'Muddler'),
-    //   Tool(id: const Uuid().v4(), name: 'Teaspoon'),
-    //   Tool(id: const Uuid().v4(), name: 'Mixer'),
-    //   Tool(id: const Uuid().v4(), name: 'Peeler'),
-    //   Tool(id: const Uuid().v4(), name: 'Tablespoon'),
-    //   Tool(id: const Uuid().v4(), name: 'Tablespoon'),
-    //   Tool(id: const Uuid().v4(), name: 'Tablespoon'),
-    // ];
-    // selectedTool = toolList.first;
   }
 
   @override
@@ -105,8 +89,7 @@ class _InformationEditCardState extends State<InformationEditCard> {
                   child: Row(
                     children: [
                       const SizedBox(
-                          width: 80,
-                          child: Icon(CommunityMaterialIcons.clock)),
+                          width: 80, child: Icon(CommunityMaterialIcons.clock)),
                       Expanded(
                         child: Text(
                           '$prepTime min.',
@@ -119,8 +102,7 @@ class _InformationEditCardState extends State<InformationEditCard> {
                           onPressed: () {
                             showDurationPicker(
                                     context: context,
-                                    initialTime:
-                                        Duration(minutes: prepTime))
+                                    initialTime: Duration(minutes: prepTime))
                                 .then((value) {
                               if (value != null) {
                                 widget.update(prepTime: value.inMinutes);
@@ -128,8 +110,7 @@ class _InformationEditCardState extends State<InformationEditCard> {
                               }
                             });
                           },
-                          icon: Icon(
-                              CommunityMaterialIcons.circle_edit_outline,
+                          icon: Icon(CommunityMaterialIcons.circle_edit_outline,
                               color: AppTheme.secondaryColor),
                         ),
                       ),
@@ -141,17 +122,12 @@ class _InformationEditCardState extends State<InformationEditCard> {
                   child: Stack(
                     children: [
                       SizedBox(
-                          width: 80,
-                          height: 45,
-                          child: Icon(selectedSeason?.name == 'Summer'
-                              ? CommunityMaterialIcons.weather_sunny
-                              : selectedSeason?.name == 'Winter'
-                                  ? CommunityMaterialIcons.snowflake
-                                  : CommunityMaterialIcons
-                                      .weather_partly_snowy)),
+                        width: 80,
+                        height: 45,
+                        child: seasonToIcon(selectedSeason!.id),
+                      ),
                       Padding(
-                        padding:
-                            const EdgeInsets.only(right: 8.0, left: 70),
+                        padding: const EdgeInsets.only(right: 8.0, left: 70),
                         child: StyledDropDown(
                           seasonDropDown: true,
                           onChanged: (value) {
@@ -178,7 +154,7 @@ class _InformationEditCardState extends State<InformationEditCard> {
                               : CommunityMaterialIcons.glass_cocktail_off)),
                       Expanded(
                         child: Text(
-                          isAlchoholic ? 'Alcoholic' : 'Non Alcoholic',
+                          isAlchoholic ? 'alcoholic'.i18n() : 'non_alcoholic'.i18n(),
                           style: AppTheme.themeData.textTheme.bodyMedium,
                         ),
                       ),
@@ -206,8 +182,7 @@ class _InformationEditCardState extends State<InformationEditCard> {
                           height: 45,
                           child: Icon(CommunityMaterialIcons.tools)),
                       Padding(
-                        padding:
-                            const EdgeInsets.only(right: 8.0, left: 70),
+                        padding: const EdgeInsets.only(right: 8.0, left: 70),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -229,8 +204,8 @@ class _InformationEditCardState extends State<InformationEditCard> {
                                       children: [
                                         Text(
                                           tool.name,
-                                          style: AppTheme.themeData
-                                              .textTheme.bodyMedium,
+                                          style: AppTheme
+                                              .themeData.textTheme.bodyMedium,
                                         ),
                                         IconButton(
                                           onPressed: () => setState(() {
@@ -251,13 +226,11 @@ class _InformationEditCardState extends State<InformationEditCard> {
                             toolList.length == selectedToolList.length
                                 ? const SizedBox()
                                 : Container(
-                                    padding:
-                                        const EdgeInsets.only(right: 10.0),
+                                    padding: const EdgeInsets.only(right: 10.0),
                                     child: Align(
                                       alignment: Alignment.centerRight,
                                       child: PopupMenuButton<Tool>(
-                                        color:
-                                            AppTheme.styledTextFieldColor,
+                                        color: AppTheme.styledTextFieldColor,
                                         icon: const Icon(
                                           CommunityMaterialIcons.plus,
                                           color: Colors.green,
@@ -267,22 +240,18 @@ class _InformationEditCardState extends State<InformationEditCard> {
                                           widget.update(
                                               toolList: selectedToolList);
                                         }),
-                                        itemBuilder:
-                                            (BuildContext context) {
+                                        itemBuilder: (BuildContext context) {
                                           return Set<Tool>.from(toolList)
                                               .difference(Set<Tool>.from(
                                                   selectedToolList))
                                               .toList()
-                                              .map((e) =>
-                                                  PopupMenuItem<Tool>(
+                                              .map((e) => PopupMenuItem<Tool>(
                                                     value: e,
                                                     child: Text(
                                                       capitalizeFirstLetter(
                                                           e.name),
-                                                      style: AppTheme
-                                                          .themeData
-                                                          .textTheme
-                                                          .bodyMedium,
+                                                      style: AppTheme.themeData
+                                                          .textTheme.bodyMedium,
                                                     ),
                                                   ))
                                               .toList();
@@ -290,17 +259,6 @@ class _InformationEditCardState extends State<InformationEditCard> {
                                       ),
                                     ),
                                   ),
-                            // Container(
-                            //   padding: const EdgeInsets.only(right: 20.0),
-                            //   alignment: Alignment.centerRight,
-                            //   child: GestureDetector(
-                            //     onTap: () {},
-                            //     child: const Icon(
-                            //       CommunityMaterialIcons.plus,
-                            //       color: Colors.green,
-                            //     ),
-                            //   ),
-                            // )
                           ],
                         ),
                       )

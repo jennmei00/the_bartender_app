@@ -349,7 +349,7 @@ class _RecipeViewState extends State<RecipeView> {
         ),
         TextButton(
           onPressed: () => _onClearSearchPressed(),
-          child: Text('Clear Search',
+          child: Text('clear_search'.i18n(),
               style: AppTheme.themeData.textTheme.headlineMedium!.copyWith(
                 color: Colors.white,
               )),

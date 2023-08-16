@@ -157,7 +157,8 @@ class _YourCreationDetailViewState extends State<YourCreationDetailView> {
                     const SizedBox(height: 20),
                     Consumer3<SeasonViewModel, ToolViewModel, UnitViewModel>(
                         builder: (context, seasonVM, toolVM, unitVM, child) =>
-                            getCreationEditWidgets(seasonVM, toolVM, unitVM)),
+                            getCreationEditWidgets(
+                                seasonVM, toolVM, unitVM, orientation)),
                     const SizedBox(height: 30),
                   ],
                 ),
@@ -184,8 +185,8 @@ class _YourCreationDetailViewState extends State<YourCreationDetailView> {
     );
   }
 
-  Widget getCreationEditWidgets(
-      SeasonViewModel seasonVM, ToolViewModel toolVM, UnitViewModel unitVM) {
+  Widget getCreationEditWidgets(SeasonViewModel seasonVM, ToolViewModel toolVM,
+      UnitViewModel unitVM, Orientation orientation) {
     if (seasonVM.response.status == Status.error ||
         toolVM.response.status == Status.error ||
         unitVM.response.status == Status.error) {
@@ -195,24 +196,57 @@ class _YourCreationDetailViewState extends State<YourCreationDetailView> {
     } else if (seasonVM.response.status == Status.completed &&
         toolVM.response.status == Status.completed &&
         unitVM.response.status == Status.completed) {
-      return Column(
-        children: [
-          InformationEditCard(
-            update: informationCallback,
-            formKey: informationFormKey,
-          ),
-          const Divider(),
-          IngredientEditCard(
-            update: ingredientsCallback,
-            formKey: ingredientsFormKey,
-          ),
-          const Divider(),
-          InstructionEditCard(
-            update: instructionsCallback,
-            formKey: instructionsFormKey,
-          ),
-        ],
-      );
+      return orientation == Orientation.portrait
+          ? Column(
+              children: [
+                InformationEditCard(
+                  update: informationCallback,
+                  formKey: informationFormKey,
+                ),
+                const Divider(),
+                IngredientEditCard(
+                  update: ingredientsCallback,
+                  formKey: ingredientsFormKey,
+                ),
+                const Divider(),
+                InstructionEditCard(
+                  update: instructionsCallback,
+                  formKey: instructionsFormKey,
+                ),
+              ],
+            )
+          : Column(
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: FractionallySizedBox(
+                        widthFactor: 1,
+                        child: InformationEditCard(
+                          update: informationCallback,
+                          formKey: informationFormKey,
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: FractionallySizedBox(
+                        widthFactor: 1,
+                        child: IngredientEditCard(
+                          update: ingredientsCallback,
+                          formKey: ingredientsFormKey,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const Divider(),
+                InstructionEditCard(
+                  update: instructionsCallback,
+                  formKey: instructionsFormKey,
+                ),
+              ],
+            );
     } else {
       return const Center(child: CircularProgressIndicator.adaptive());
     }

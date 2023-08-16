@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:the_bartender_app/models/recipe.dart';
 import 'package:the_bartender_app/res/style/app_theme.dart';
+import 'package:the_bartender_app/utils/id_util.dart';
 import 'package:the_bartender_app/utils/routes/router.gr.dart';
 import 'package:the_bartender_app/viewmodels/recipe_detail_view_model.dart';
 
@@ -35,11 +36,7 @@ class CocktailCard extends StatelessWidget {
               child: Column(
                 children: [
                   Image.asset(
-                    recipe.drinkType.name == 'Cocktail'
-                        ? 'assets/images/cocktail.png'
-                        : recipe.drinkType.name == 'Shot'
-                            ? 'assets/images/shot.png'
-                            : 'assets/images/other.png',
+                    drinkTypeToImagePath(recipe.drinkType.id),
                     height: 100,
                     alignment: Alignment.center,
                   ),
@@ -54,16 +51,8 @@ class CocktailCard extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        recipe.season.name == 'Summer'
-                            ? const Icon(CommunityMaterialIcons.weather_sunny)
-                            : recipe.season.name == 'Winter'
-                                ? const Icon(CommunityMaterialIcons.snowflake)
-                                : const Icon(CommunityMaterialIcons
-                                    .weather_partly_snowy),
-                        recipe.alcoholic
-                            ? const Icon(CommunityMaterialIcons.glass_cocktail)
-                            : const Icon(
-                                CommunityMaterialIcons.glass_cocktail_off),
+                        seasonToIcon(recipe.season.id),
+                        alcoholicToIcon(recipe.alcoholic),
                       ],
                     ),
                   ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:localization/localization.dart';
 import 'package:the_bartender_app/models/drink_type.dart';
 import 'package:the_bartender_app/res/style/app_theme.dart';
+import 'package:the_bartender_app/utils/id_util.dart';
 
 class CocktailImageWidget extends StatelessWidget {
   final String name;
@@ -24,19 +25,15 @@ class CocktailImageWidget extends StatelessWidget {
           Flexible(
             child: Text(
               isCreation
-                  ? 'recipe_detail_text'.i18n()
-                  : 'General Useful Informations For Your Drink',
+                  ? 'your_creation_detail_text'.i18n()
+                  : 'recipe_detail_text'.i18n(),
               style: AppTheme.themeData.textTheme.displayMedium,
               textAlign: TextAlign.center,
               softWrap: true,
             ),
           ),
           Image.asset(
-            drinkType.name == 'Cocktail'
-                ? 'assets/images/cocktail.png'
-                : drinkType.name == 'Shot'
-                    ? 'assets/images/shot.png'
-                    : 'assets/images/other.png',
+            drinkTypeToImagePath(drinkType.id),
             height: 100,
           ),
         ],

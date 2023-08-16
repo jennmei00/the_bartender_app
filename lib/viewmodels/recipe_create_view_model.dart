@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:localization/localization.dart';
 import 'package:the_bartender_app/data/api/api_response.dart';
 import 'package:the_bartender_app/models/ingredient.dart';
 import 'package:the_bartender_app/models/recipe_create.dart';
@@ -30,7 +31,7 @@ class RecipeCreateViewModel with ChangeNotifier {
       if (kDebugMode) {
         print(e);
       }
-      _apiResponse = ApiResponse.error(e.toString());
+      _apiResponse = ApiResponse.error('something_went_wrong'.i18n());
     }
 
     return _apiResponse;

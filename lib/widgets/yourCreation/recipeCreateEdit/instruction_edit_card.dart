@@ -64,7 +64,7 @@ class _InstructionEditCardState extends State<InstructionEditCard> {
                           focusNode: focusNode,
                           validator: (value) {
                             if (value == '') {
-                              return 'Please enter some text';
+                              return 'instruction_validator'.i18n();
                             }
                             return null;
                           },

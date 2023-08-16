@@ -169,7 +169,7 @@ class _IngredientEditCardState extends State<IngredientEditCard> {
                                 )),
                                 validator: (_) {
                                   if (ingredients.isEmpty) {
-                                    return 'Please enter at least one ingredient';
+                                    return 'ingredient_validator'.i18n();
                                   }
                                   return null;
                                 },

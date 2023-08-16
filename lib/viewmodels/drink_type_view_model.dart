@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
+import 'package:localization/localization.dart';
 import 'package:the_bartender_app/data/api/api_response.dart';
 import 'package:the_bartender_app/models/drink_type.dart';
 import 'package:the_bartender_app/models/repositories/drink_type_repository.dart';
@@ -26,7 +27,10 @@ class DrinkTypeViewModel with ChangeNotifier {
       setSelectedDrinkType(drinkTypes);
       _apiResponse = ApiResponse.completed(drinkTypes);
     } catch (e) {
-      _apiResponse = ApiResponse.error(e.toString());
+      if (kDebugMode) {
+        print(e);
+      }
+      _apiResponse = ApiResponse.error('something_went_wrong'.i18n());
     }
     notifyListeners();
   }

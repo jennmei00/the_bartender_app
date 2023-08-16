@@ -30,13 +30,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      precacheImage(
-          AppTheme.backgroundImage, context); //TODOLoad Image before starting
+      //*Load the images
+      precacheImage(AppTheme.backgroundImage, context);
       precacheImage(AppTheme.woodBackgroundImage, context);
     });
 
-    //TODODelete this row
-    // prefs.setBool('isFirstStart', true);
 
     return MultiProvider(
       providers: [
@@ -70,10 +68,9 @@ class MyApp extends StatelessWidget {
           Locale('de', 'DE'),
         ],
         localeResolutionCallback: (locale, supportedLocales) {
-          //TODOcheck Localization
-          // if(supportedLocales.contains(locale)) {
-          //   return locale;
-          // }
+          if (supportedLocales.contains(locale)) {
+            return locale;
+          }
 
           //*define en_US as default when de language code is 'en'
           if (locale?.languageCode == 'en') {
@@ -81,8 +78,7 @@ class MyApp extends StatelessWidget {
           }
 
           //*default language
-          // return const Locale('de', 'DE');
-          return const Locale('en', 'US');
+          return const Locale('de', 'DE');
         },
       ),
     );

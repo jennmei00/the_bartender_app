@@ -64,7 +64,13 @@ class IngredientExpansionTile extends StatelessWidget {
                                     SizedBox(
                                       width: 40,
                                       child: Text(
-                                        '${ingredient.amount?.toStringAsFixed(ingredient.amount?.truncateToDouble() == ingredient.amount ? 0 : 2)}',
+                                        ingredient.amount?.toStringAsFixed(
+                                                ingredient.amount
+                                                            ?.truncateToDouble() ==
+                                                        ingredient.amount
+                                                    ? 0
+                                                    : 1) ??
+                                            '',
                                         style: AppTheme
                                             .themeData.textTheme.bodyMedium,
                                       ),

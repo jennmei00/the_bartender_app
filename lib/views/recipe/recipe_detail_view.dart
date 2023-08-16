@@ -30,7 +30,6 @@ class RecipeDetailView extends StatelessWidget {
       alcoholic: true,
       instruction: 'Mix all Ingredients in a glass full of Crushed Ice.',
       descriiption: '',
-      rating: 0,
       user: User(id: const Uuid().v4(), username: 'jennmei00'),
       season: Season(id: const Uuid().v4(), name: 'Summer'),
       drinkType: DrinkType(id: const Uuid().v4(), name: 'Cocktail'),

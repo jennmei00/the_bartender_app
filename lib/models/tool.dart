@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:the_bartender_app/utils/globals.dart';
+
 class Tool {
   String id;
   String name;
@@ -19,23 +21,15 @@ class Tool {
     );
   }
 
-  Map<String, dynamic> toMap() {
-    final result = <String, dynamic>{};
-  
-    result.addAll({'tool_id': id});
-    result.addAll({'name': name});
-  
-    return result;
-  }
-
   factory Tool.fromMap(Map<String, dynamic> map) {
     return Tool(
       id: map['tool_id'] ?? '',
-      name: map['name'] ?? '',
+      name: currentLocal?.languageCode == 'de'
+          ? map['name_de']
+          : map['name'] ?? '',
     );
   }
 
-  String toJson() => json.encode(toMap());
 
   factory Tool.fromJson(String source) => Tool.fromMap(json.decode(source));
 }

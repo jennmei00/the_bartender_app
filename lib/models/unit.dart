@@ -1,9 +1,11 @@
 import 'dart:convert';
 
+import 'package:the_bartender_app/utils/globals.dart';
+
 class Unit {
   String id;
   String name;
-  
+
   Unit({
     required this.id,
     required this.name,
@@ -19,23 +21,14 @@ class Unit {
     );
   }
 
-  Map<String, dynamic> toMap() {
-    final result = <String, dynamic>{};
-  
-    result.addAll({'unit_id': id});
-    result.addAll({'name': name});
-  
-    return result;
-  }
-
   factory Unit.fromMap(Map<String, dynamic> map) {
     return Unit(
       id: map['unit_id'] ?? '',
-      name: map['name'] ?? '',
+      name: currentLocal?.languageCode == 'de'
+          ? map['name_de']
+          : map['name'] ?? '',
     );
   }
-
-  String toJson() => json.encode(toMap());
 
   factory Unit.fromJson(String source) => Unit.fromMap(json.decode(source));
 }

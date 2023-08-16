@@ -167,7 +167,7 @@ class _YourCreationViewState extends State<YourCreationView> {
                                                 validator: (String value) {
                                                   if (value.isEmpty ||
                                                       value == '') {
-                                                    return 'mandatory_field'
+                                                    return 'name_validator'
                                                         .i18n();
                                                   }
                                                 },

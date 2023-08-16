@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:localization/localization.dart';
 import 'package:the_bartender_app/models/recipe.dart';
 import 'package:the_bartender_app/res/style/app_theme.dart';
+import 'package:the_bartender_app/utils/id_util.dart';
 import 'package:the_bartender_app/widgets/recipeDetail/information_item.dart';
 
 class InformationCard extends StatelessWidget {
@@ -41,53 +42,57 @@ class InformationCard extends StatelessWidget {
             Column(
               children: [
                 InformationItem(
-                  icon: CommunityMaterialIcons.timer,
+                  icon: const Icon(CommunityMaterialIcons.timer),
                   info: '${recipe.prepTimeMinutes} min.',
                 ),
                 InformationItem(
-                  icon: recipe.season.name == 'Summer'
-                      ? CommunityMaterialIcons.weather_sunny
-                      : recipe.season.name == 'Winter'
-                          ? CommunityMaterialIcons.snowflake
-                          : CommunityMaterialIcons.weather_partly_snowy,
+                  icon: seasonToIcon(recipe.season.id),
                   info: recipe.season.name,
                 ),
                 InformationItem(
-                  icon: CommunityMaterialIcons.glass_cocktail,
-                  info: recipe.alcoholic ? 'Alcoholic' : 'Non Alcoholic',
+                  icon: alcoholicToIcon(recipe.alcoholic),
+                  info: recipe.alcoholic
+                      ? 'alcoholic'.i18n()
+                      : 'non_alcoholic'.i18n(),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 8.0),
                   child: Stack(
                     children: [
-                      const SizedBox(
-                          width: 80, child: Icon(CommunityMaterialIcons.tools)),
+                      const Align(
+                        alignment: Alignment.centerLeft,
+                        child: SizedBox(
+                            width: 80,
+                            child: Icon(CommunityMaterialIcons.tools)),
+                      ),
                       Padding(
                         padding: const EdgeInsets.only(right: 8.0, left: 70),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: recipe.tools
-                              .map(
-                                (tool) => Container(
-                                  width: double.infinity,
-                                  margin: const EdgeInsets.only(bottom: 5),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(5.0),
-                                    color: AppTheme.styledTextFieldColor
-                                        .withOpacity(0.6),
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 10.0),
-                                    child: Text(
-                                      tool.name,
-                                      style: AppTheme
-                                          .themeData.textTheme.bodyMedium,
+                                  ?.map(
+                                    (tool) => Container(
+                                      width: double.infinity,
+                                      margin: const EdgeInsets.only(bottom: 5),
+                                      decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(5.0),
+                                        color: AppTheme.styledTextFieldColor
+                                            .withOpacity(0.6),
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 10.0),
+                                        child: Text(
+                                          tool.name,
+                                          style: AppTheme
+                                              .themeData.textTheme.bodyMedium,
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                ),
-                              )
-                              .toList(),
+                                  )
+                                  .toList() ??
+                              [],
                         ),
                       )
                     ],

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:the_bartender_app/models/drink_type.dart';
 import 'package:the_bartender_app/res/style/app_theme.dart';
+import 'package:the_bartender_app/utils/id_util.dart';
 import 'package:the_bartender_app/utils/string_util.dart';
 import 'package:the_bartender_app/viewmodels/drink_type_view_model.dart';
 
@@ -38,11 +39,7 @@ class _AnimatedCarouselState extends State<AnimatedCarousel> {
                 height: 150,
                 width: 100,
                 child: Image.asset(
-                  val.name == 'Cocktail'
-                      ? 'assets/images/cocktail.png'
-                      : val.name == 'Shot'
-                          ? 'assets/images/shot.png'
-                          : 'assets/images/other.png',
+                  drinkTypeToImagePath(val.id),
                   height: 200,
                 ),
               ),

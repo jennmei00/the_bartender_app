@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:localization/localization.dart';
 import 'package:the_bartender_app/models/ingredient.dart';
 import 'package:the_bartender_app/models/unit.dart';
 import 'package:the_bartender_app/res/style/app_theme.dart';
@@ -27,7 +28,7 @@ class _IngredientDialogState extends State<IngredientDialog> {
     return AlertDialog(
       backgroundColor: AppTheme.drawerBackgroundcolor,
       title: Text(
-        'Add Ingredient',
+        'add_ingredient'.i18n(),
         style: AppTheme.themeData.textTheme.headlineMedium!
             .copyWith(color: AppTheme.themeData.colorScheme.primary),
         textAlign: TextAlign.center,
@@ -39,23 +40,24 @@ class _IngredientDialogState extends State<IngredientDialog> {
             children: [
               IngredientTextField(
                 controller: nameController,
-                title: 'Name',
+                title: 'name'.i18n(),
                 validator: (value) {
                   if (value == '') {
-                    return 'Enter a name';
+                    return 'name_validator'.i18n();
                   }
                   return null;
                 },
               ),
               IngredientTextField(
                 controller: amountController,
-                title: 'Amount',
+                title: 'amount'.i18n(),
                 isNumeric: true,
               ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Unit', style: AppTheme.themeData.textTheme.bodySmall),
+                  Text('unit'.i18n(),
+                      style: AppTheme.themeData.textTheme.bodySmall),
                   StatefulBuilder(builder: (context, setState) {
                     return StyledDropDown(
                       onChanged: (value) {
@@ -81,7 +83,7 @@ class _IngredientDialogState extends State<IngredientDialog> {
               Navigator.of(context).pop();
             },
             child: Text(
-              'CANCEL',
+              'cancel'.i18n().toUpperCase(),
               style: AppTheme.themeData.textTheme.headlineMedium!
                   .copyWith(color: AppTheme.themeData.colorScheme.primary),
             )),
@@ -97,7 +99,7 @@ class _IngredientDialogState extends State<IngredientDialog> {
               }
             },
             child: Text(
-              'ADD',
+              'add'.i18n().toUpperCase(),
               style: AppTheme.themeData.textTheme.headlineMedium!
                   .copyWith(color: AppTheme.themeData.colorScheme.primary),
             ))

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:localization/localization.dart';
 import 'package:the_bartender_app/res/style/app_theme.dart';
+import 'package:the_bartender_app/utils/globals.dart';
 import 'package:the_bartender_app/utils/route_util.dart';
 import 'package:the_bartender_app/widgets/custom_scaffold.dart';
 import 'package:the_bartender_app/widgets/styled_button.dart';
@@ -11,7 +12,8 @@ class HomeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
+    currentLocal = Localizations.localeOf(context);
+
     return CustomScaffold(
       image: AppTheme.backgroundImage,
       appBar: true,
