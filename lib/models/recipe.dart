@@ -81,8 +81,7 @@ class RecipeDetail {
       id: map['recipe_id'] ?? '',
       name: map['name'] ?? '',
       creationDate: DateTime.parse(map['creation_date']),
-      editDate:
-          map['edit_date'] != null ? DateTime.parse(map['edit_date']) : null,
+      editDate: DateTime.tryParse(map['edit_date'] ?? ''),
       prepTimeMinutes: map['prep_time_minutes']?.toInt() ?? 0,
       alcoholic: map['alcoholic'] ?? false,
       instruction: map['instruction'] ?? '',
@@ -99,7 +98,6 @@ class RecipeDetail {
           map['ingredients']?.map((x) => Ingredient.fromMap(x))),
     );
   }
-
 
   factory RecipeDetail.fromJson(String source) =>
       RecipeDetail.fromMap(json.decode(source));

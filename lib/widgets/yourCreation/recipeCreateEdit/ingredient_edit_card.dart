@@ -117,7 +117,7 @@ class _IngredientEditCardState extends State<IngredientEditCard> {
                                       ),
                                     ),
                                     SizedBox(
-                                      width: 80,
+                                      width: 90,
                                       child: Text(
                                         ingredient.unit?.name ?? '',
                                         style: AppTheme

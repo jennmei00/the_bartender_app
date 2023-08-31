@@ -33,7 +33,7 @@ class Ingredient {
       id: map['ingredient_id'] ?? '',
       name: map['name'] ?? '',
       unit: map['unit'] != null ? Unit.fromMap(map['unit']) : null,
-      amount: map['amount'],
+      amount: double.tryParse('${map['amount']}'),
     );
   }
 

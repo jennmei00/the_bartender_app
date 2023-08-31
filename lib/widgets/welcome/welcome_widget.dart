@@ -27,7 +27,6 @@ class WelcomeWidget extends StatelessWidget {
             ),
             const SizedBox(width: 20),
             SizedBox(
-              width: 140,
               child: StyledButton(
                 title: 'register'.i18n(),
                 onButtonPressed: () => registerPressed(),
@@ -47,7 +46,6 @@ class WelcomeWidget extends StatelessWidget {
             ),
             const SizedBox(width: 20),
             SizedBox(
-              width: 140,
               child: StyledButton(
                 title: 'login'.i18n(),
                 onButtonPressed: () => loginPressed(),

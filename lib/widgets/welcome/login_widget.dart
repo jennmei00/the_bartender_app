@@ -58,7 +58,6 @@ class LoginWidget extends StatelessWidget {
           ),
           const SizedBox(height: 30),
           SizedBox(
-            width: 140,
             child: StyledButton(
               title: 'login'.i18n(),
               onButtonPressed: () => loginPressed(),
