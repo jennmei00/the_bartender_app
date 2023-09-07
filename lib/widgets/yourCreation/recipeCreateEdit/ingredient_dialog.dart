@@ -62,7 +62,7 @@ class _IngredientDialogState extends State<IngredientDialog> {
                     return StyledDropDown(
                       onChanged: (value) {
                         setState(() {
-                          selectedUnit = value;
+                          selectedUnit = widget.unitList.firstWhere((element) => element.id == value);
                         });
                       },
                       seasonDropDown: false,

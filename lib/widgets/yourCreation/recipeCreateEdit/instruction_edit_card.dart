@@ -1,14 +1,19 @@
 import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:localization/localization.dart';
+import 'package:the_bartender_app/models/recipe.dart';
 import 'package:the_bartender_app/res/style/app_theme.dart';
 import 'package:the_bartender_app/widgets/yourCreation/recipeCreateEdit/ingredient_textfield.dart';
 
 class InstructionEditCard extends StatefulWidget {
   final GlobalKey<FormState> formKey;
+  final RecipeDetail? recipeDetail;
   final Function({String? instruction}) update;
   const InstructionEditCard(
-      {super.key, required this.formKey, required this.update});
+      {super.key,
+      required this.formKey,
+      required this.update,
+      this.recipeDetail});
 
   @override
   State<InstructionEditCard> createState() => _InstructionEditCardState();
@@ -18,6 +23,14 @@ class _InstructionEditCardState extends State<InstructionEditCard> {
   final TextEditingController instructionController = TextEditingController();
 
   final FocusNode focusNode = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.recipeDetail != null) {
+      instructionController.text = widget.recipeDetail!.instruction;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -25,12 +25,12 @@ class RecipeViewModel with ChangeNotifier {
 
   //* Call the recipe service and gets the data of requested recipe data
   Future<void> fetchRecipeData(String searchText,
-      {RecipeFilter? recipeFilter}) async {
+      {RecipeFilter? recipeFilter, bool isUserRecipes = false}) async {
     _apiResponse = ApiResponse.loading('Fetching recipe data');
     notifyListeners();
     try {
       List<Recipe> recipeList =
-          await RecipeRepository().fetchRecipeList(searchText, recipeFilter: recipeFilter);
+          await RecipeRepository().fetchRecipeList(searchText, recipeFilter: recipeFilter, isUserRecipes: isUserRecipes,);
       setSelectedRecipe(recipe);
       _apiResponse = ApiResponse.completed(recipeList);
     } catch (e) {

@@ -32,18 +32,18 @@ class StyledDropDown extends StatelessWidget {
         ),
         child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10.0),
-            child: DropdownButton(
-              value: seasonDropDown ? season : unit,
+            child: DropdownButton<String>(
+              value: seasonDropDown ? season!.id : unit == null ? null : unit!.id,
               items: seasonDropDown
                   ? seasonList
                       .map((e) => DropdownMenuItem(
-                            value: e,
+                            value: e.id,
                             child: Text(capitalizeFirstLetter(e.name)),
                           ))
                       .toList()
                   : unitList
                       .map((e) => DropdownMenuItem(
-                            value: e,
+                            value: e.id,
                             child: Text(seasonDropDown
                                 ? capitalizeFirstLetter(e.name)
                                 : e.name),

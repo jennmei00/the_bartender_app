@@ -2,12 +2,13 @@ import 'package:the_bartender_app/data/services/base_service.dart';
 import 'package:the_bartender_app/data/services/general_service.dart';
 import 'package:the_bartender_app/models/recipe.dart';
 import 'package:the_bartender_app/models/recipe_filter.dart';
+import 'package:the_bartender_app/utils/globals.dart';
 
 class RecipeRepository {
   final BaseService _recipeService = GeneralService();
 
   Future<List<Recipe>> fetchRecipeList(String searchText,
-      {RecipeFilter? recipeFilter}) async {
+      {RecipeFilter? recipeFilter, bool isUserRecipes = false}) async {
     String baseURL =
         'recipe?select=recipe_id,name,rating,alcoholic,user(user_id,username),season(season_id,name,name_de),drink_type(drink_type_id, name, name_de)&name=ilike.*$searchText*';
 
@@ -56,7 +57,14 @@ class RecipeRepository {
       }
     }
 
-    dynamic response = await _recipeService.getResponse(baseURL + seasonFilter + drinkTypeFilter + alcoholicFilter);
+
+    dynamic response = await _recipeService.getResponse(baseURL +
+        seasonFilter +
+        drinkTypeFilter +
+        alcoholicFilter +
+        (isUserRecipes
+            ? '&user_id=eq.${sharedPreferences!.getString('UserID')}'
+            : ''));
     final List<dynamic> jsonData = response;
     List<Recipe> recipeList =
         jsonData.map((json) => Recipe.fromMap(json)).toList();

@@ -1,3 +1,5 @@
+import 'package:auto_route/auto_route.dart';
+import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:the_bartender_app/data/api/api_response.dart';
@@ -10,7 +12,11 @@ import 'package:the_bartender_app/models/unit.dart';
 import 'package:the_bartender_app/models/user.dart';
 import 'package:the_bartender_app/res/style/app_theme.dart';
 import 'package:the_bartender_app/utils/route_util.dart';
+import 'package:the_bartender_app/utils/routes/router.gr.dart';
 import 'package:the_bartender_app/viewmodels/recipe_detail_view_model.dart';
+import 'package:the_bartender_app/viewmodels/season_view_model.dart';
+import 'package:the_bartender_app/viewmodels/tool_view_model.dart';
+import 'package:the_bartender_app/viewmodels/unit_view_model.dart';
 import 'package:the_bartender_app/widgets/cocktail_image_widget.dart';
 import 'package:the_bartender_app/widgets/custom_scaffold.dart';
 import 'package:the_bartender_app/widgets/recipeDetail/infromation_card.dart';
@@ -19,10 +25,22 @@ import 'package:the_bartender_app/widgets/recipeDetail/instruction_card.dart';
 import 'package:the_bartender_app/widgets/styled_error.dart';
 import 'package:uuid/uuid.dart';
 
-class RecipeDetailView extends StatelessWidget {
-  final TextEditingController searchTextController = TextEditingController();
+class RecipeDetailView extends StatefulWidget {
   final String recipeName;
-  final RecipeDetail recipeDetail = RecipeDetail(
+  final bool isEditable;
+
+  const RecipeDetailView(
+      {super.key, required this.recipeName, this.isEditable = false});
+
+  @override
+  State<RecipeDetailView> createState() => _RecipeDetailViewState();
+}
+
+class _RecipeDetailViewState extends State<RecipeDetailView> {
+  final TextEditingController searchTextController = TextEditingController();
+  bool isLoaded = false;
+
+  final RecipeDetail recipeDetailDummy = RecipeDetail(
       id: const Uuid().v4(),
       name: 'Niks Cocktail',
       creationDate: DateTime.now(),
@@ -47,8 +65,6 @@ class RecipeDetailView extends StatelessWidget {
         Ingredient(id: const Uuid().v4(), name: 'Pepsi')
       ]);
 
-  RecipeDetailView({super.key, required this.recipeName});
-
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
@@ -56,7 +72,51 @@ class RecipeDetailView extends StatelessWidget {
       drawerView: DrawerView.recipes,
       appBar: true,
       drawer: false,
-      title: Text(recipeName),
+      title: Text(widget.recipeName),
+      actions: widget.isEditable
+          ? [
+              IconButton(
+                  onPressed: !isLoaded
+                      ? null
+                      : () {
+                          RecipeDetail recipeDetail =
+                              Provider.of<RecipeDetailViewModel>(context,
+                                      listen: false)
+                                  .recipe!;
+
+                          List<Season>? seasonList =
+                              Provider.of<SeasonViewModel>(context,
+                                      listen: false)
+                                  .seasonList;
+                          if (seasonList == null || seasonList.isEmpty) {
+                            Provider.of<SeasonViewModel>(context, listen: false)
+                                .fetchData();
+                          }
+
+                          List<Tool>? toolList =
+                              Provider.of<ToolViewModel>(context, listen: false)
+                                  .toolList;
+                          if (toolList == null || toolList.isEmpty) {
+                            Provider.of<ToolViewModel>(context, listen: false)
+                                .fetchData();
+                          }
+
+                          List<Unit>? unitList =
+                              Provider.of<UnitViewModel>(context, listen: false)
+                                  .unitList;
+                          if (unitList == null || unitList.isEmpty) {
+                            Provider.of<UnitViewModel>(context, listen: false)
+                                .fetchData();
+                          }
+                          AutoRouter.of(context).push(
+                              YourCreationDetailViewRoute(
+                                  drinkType: recipeDetail.drinkType,
+                                  name: recipeDetail.name,
+                                  recipeDetail: recipeDetail));
+                        },
+                  icon: const Icon(CommunityMaterialIcons.pencil))
+            ]
+          : null,
       body: Consumer<RecipeDetailViewModel>(builder: (context, value, child) {
         switch (value.response.status) {
           case Status.initial || Status.loading:
@@ -67,6 +127,11 @@ class RecipeDetailView extends StatelessWidget {
               ),
             );
           case Status.completed:
+            Future.delayed(Duration.zero, () {
+              setState(() {
+                isLoaded = true;
+              });
+            });
             return OrientationBuilder(builder: (context, orientation) {
               return SingleChildScrollView(
                 physics: const BouncingScrollPhysics(),

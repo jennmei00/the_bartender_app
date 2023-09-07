@@ -11,6 +11,7 @@ class CustomScaffold extends StatelessWidget {
   final bool appBar;
   final Widget? title;
   final bool drawer;
+  final List<Widget>? actions;
   const CustomScaffold({
     super.key,
     required this.body,
@@ -19,6 +20,7 @@ class CustomScaffold extends StatelessWidget {
     this.appBar = false,
     this.title,
     this.drawer = true,
+    this.actions,
   });
 
   @override
@@ -54,6 +56,7 @@ class CustomScaffold extends StatelessWidget {
                               child: title,
                             )
                           : null,
+                      actions: actions,
                     )
                   : null,
               drawer: StyledDrawer(

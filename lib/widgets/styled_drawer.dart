@@ -7,8 +7,10 @@ import 'package:the_bartender_app/res/style/app_theme.dart';
 import 'package:the_bartender_app/utils/globals.dart';
 
 import 'package:the_bartender_app/utils/route_util.dart';
+import 'package:the_bartender_app/utils/routes/router.gr.dart';
 import 'package:the_bartender_app/utils/string_util.dart';
 import 'package:the_bartender_app/viewmodels/drink_type_view_model.dart';
+import 'package:the_bartender_app/viewmodels/recipe_view_model.dart';
 import 'package:the_bartender_app/viewmodels/season_view_model.dart';
 
 class StyledDrawer extends StatelessWidget {
@@ -58,22 +60,27 @@ class StyledDrawer extends StatelessWidget {
         .map(
           (val) => val == DrawerView.home
               ? Container()
-              : ListTile(
-                  titleTextStyle: drawerView == val
-                      ? AppTheme.themeData.textTheme.headlineMedium!.copyWith(
-                          color: AppTheme.themeData.colorScheme.primary)
-                      : AppTheme.themeData.textTheme.headlineMedium,
-                  contentPadding: const EdgeInsets.only(bottom: 20, left: 50),
-                  title: Text(
-                    convertToSnakeCase(val.name).i18n().toUpperCase(),
-                  ),
-                  onTap: () => onTapPressed(context, val),
-                ),
+              : val == DrawerView.myRecipes &&
+                      !(sharedPreferences!.getBool('loginActive') ?? false)
+                  ? Container()
+                  : ListTile(
+                      titleTextStyle: drawerView == val
+                          ? AppTheme.themeData.textTheme.headlineMedium!
+                              .copyWith(
+                                  color: AppTheme.themeData.colorScheme.primary)
+                          : AppTheme.themeData.textTheme.headlineMedium,
+                      contentPadding:
+                          const EdgeInsets.only(bottom: 20, left: 50),
+                      title: Text(
+                        convertToSnakeCase(val.name).i18n().toUpperCase(),
+                      ),
+                      onTap: () => onTapPressed(context, val),
+                    ),
         )
         .toList();
   }
 
-  onTapPressed(BuildContext context, DrawerView val)  {
+  onTapPressed(BuildContext context, DrawerView val) {
     //*closes the Drawer when navigation to another view
     AutoRouter.of(context).pop();
     AutoRouter.of(context).popAndPush(drawerViewMap[val]!);
@@ -90,14 +97,17 @@ class StyledDrawer extends StatelessWidget {
         drinkTypeVM.fetchData();
       }
     } else if (val == DrawerView.yourCreation) {
-        if (sharedPreferences!.getBool('loginActive') ?? false) {
-          DrinkTypeViewModel drinkTypeVM =
-              Provider.of<DrinkTypeViewModel>(context, listen: false);
-          if (drinkTypeVM.drinkTypeList == null) {
-            drinkTypeVM.fetchData();
-          }
+      if (sharedPreferences!.getBool('loginActive') ?? false) {
+        DrinkTypeViewModel drinkTypeVM =
+            Provider.of<DrinkTypeViewModel>(context, listen: false);
+        if (drinkTypeVM.drinkTypeList == null) {
+          drinkTypeVM.fetchData();
         }
-      
+      }
+    } else if (val == DrawerView.myRecipes) {
+      Provider.of<RecipeViewModel>(context, listen: false).fetchRecipeData('', isUserRecipes: true);
+
+      AutoRouter.of(context).push(const MyRecipeViewRoute());
     }
   }
 }

@@ -17,7 +17,8 @@ class RecipeCreateViewModel with ChangeNotifier {
   Future<ApiResponse> postData(
       {required RecipeCreate recipe,
       required List<Tool> toolList,
-      required List<Ingredient> ingredientList}) async {
+      required List<Ingredient> ingredientList,
+      required bool isEdited}) async {
     _apiResponse = ApiResponse.loading('Posting recipe data');
 
     try {
@@ -25,6 +26,7 @@ class RecipeCreateViewModel with ChangeNotifier {
         recipe: recipe,
         ingredientList: ingredientList,
         toolList: toolList,
+        isEdited: isEdited,
       );
       _apiResponse = ApiResponse.completed('SUCCESS');
     } catch (e) {

@@ -1,9 +1,11 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:localization/localization.dart';
 import 'package:provider/provider.dart';
 import 'package:the_bartender_app/data/api/api_response.dart';
 import 'package:the_bartender_app/models/drink_type.dart';
 import 'package:the_bartender_app/models/ingredient.dart';
+import 'package:the_bartender_app/models/recipe.dart';
 import 'package:the_bartender_app/models/recipe_create.dart';
 import 'package:the_bartender_app/models/season.dart';
 import 'package:the_bartender_app/models/tool.dart';
@@ -11,7 +13,9 @@ import 'package:the_bartender_app/models/user.dart';
 import 'package:the_bartender_app/res/style/app_theme.dart';
 import 'package:the_bartender_app/utils/globals.dart';
 import 'package:the_bartender_app/utils/route_util.dart';
+import 'package:the_bartender_app/utils/routes/router.gr.dart';
 import 'package:the_bartender_app/viewmodels/recipe_create_view_model.dart';
+import 'package:the_bartender_app/viewmodels/recipe_detail_view_model.dart';
 import 'package:the_bartender_app/viewmodels/season_view_model.dart';
 import 'package:the_bartender_app/viewmodels/tool_view_model.dart';
 import 'package:the_bartender_app/viewmodels/unit_view_model.dart';
@@ -27,9 +31,13 @@ import 'package:uuid/uuid.dart';
 class YourCreationDetailView extends StatefulWidget {
   final DrinkType drinkType;
   final String name;
+  final RecipeDetail? recipeDetail;
 
   const YourCreationDetailView(
-      {super.key, required this.drinkType, required this.name});
+      {super.key,
+      required this.drinkType,
+      required this.name,
+      this.recipeDetail});
 
   @override
   State<YourCreationDetailView> createState() => _YourCreationDetailViewState();
@@ -47,6 +55,19 @@ class _YourCreationDetailViewState extends State<YourCreationDetailView> {
   final GlobalKey<FormState> instructionsFormKey = GlobalKey<FormState>();
   bool isIngredientsValide = false;
   bool isInstructionValide = false;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.recipeDetail != null) {
+      prepTime = widget.recipeDetail!.prepTimeMinutes;
+      selectedSeason = widget.recipeDetail!.season;
+      instructions = widget.recipeDetail!.instruction;
+      selectedTools = widget.recipeDetail!.tools;
+      alcoholic = widget.recipeDetail!.alcoholic;
+      ingredients = widget.recipeDetail!.ingredients;
+    }
+  }
 
   void informationCallback(
       {int? prepTime, Season? season, List<Tool>? toolList, bool? alcoholic}) {
@@ -82,13 +103,18 @@ class _YourCreationDetailViewState extends State<YourCreationDetailView> {
       isInstructionValide = true;
     }
     if (isIngredientsValide && isInstructionValide) {
+      //if recipeDetail != null, then the recipe was edited and not created
       User user =
           User(id: sharedPreferences!.getString('UserID') ?? '', username: '');
       RecipeCreate recipe = RecipeCreate(
-        recipeId: const Uuid().v4(),
+        recipeId: widget.recipeDetail != null
+            ? widget.recipeDetail!.id
+            : const Uuid().v4(),
         name: widget.name,
-        creationDate: DateTime.now(),
-        editDate: null,
+        creationDate: widget.recipeDetail != null
+            ? widget.recipeDetail!.creationDate
+            : DateTime.now(),
+        editDate: widget.recipeDetail != null ? DateTime.now() : null,
         prepTimeMinutes: prepTime,
         alcoholic: alcoholic,
         instruction: instructions!,
@@ -118,13 +144,27 @@ class _YourCreationDetailViewState extends State<YourCreationDetailView> {
         recipe: recipe,
         ingredientList: ingredients!,
         toolList: selectedTools ?? [],
+        isEdited: widget.recipeDetail != null,
       )
           .then((value) {
         Navigator.of(context, rootNavigator: true).pop(); //*Close the dialog
         if (value.status == Status.completed) {
-          Navigator.of(context).pop(); //*Go to previous page
-          ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Recipe sucessfully posted')));
+          if (widget.recipeDetail != null) {
+            Navigator.of(context).pop(); //*Go to previous page
+            //*Reload Detail Page 
+            Navigator.of(context).pop(); //*Pop detail page
+            Provider.of<RecipeDetailViewModel>(context, listen: false)
+                .fetchRecipeData(widget.recipeDetail!.id);
+            AutoRouter.of(context).push(RecipeDetailViewRoute(
+                recipeName: recipe.name, isEditable: true)); //*Load detail page
+
+            ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Recipe sucessfully edited')));
+          } else {
+            Navigator.of(context).pop(); //*Go to previous page
+            ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Recipe sucessfully posted')));
+          }
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(content: Text('Something went wrong!')));
@@ -226,6 +266,7 @@ class _YourCreationDetailViewState extends State<YourCreationDetailView> {
                         child: InformationEditCard(
                           update: informationCallback,
                           formKey: informationFormKey,
+                          recipeDetail: widget.recipeDetail,
                         ),
                       ),
                     ),
@@ -235,6 +276,7 @@ class _YourCreationDetailViewState extends State<YourCreationDetailView> {
                         child: IngredientEditCard(
                           update: ingredientsCallback,
                           formKey: ingredientsFormKey,
+                          recipeDetail: widget.recipeDetail,
                         ),
                       ),
                     ),
@@ -244,6 +286,7 @@ class _YourCreationDetailViewState extends State<YourCreationDetailView> {
                 InstructionEditCard(
                   update: instructionsCallback,
                   formKey: instructionsFormKey,
+                  recipeDetail: widget.recipeDetail,
                 ),
               ],
             );

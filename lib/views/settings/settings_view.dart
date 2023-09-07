@@ -21,6 +21,30 @@ class SettingsView extends StatelessWidget {
       title: Text(
         'settings'.i18n().toUpperCase(),
       ),
+      actions: [
+        GestureDetector(
+          child: const Icon(
+            CommunityMaterialIcons.ip,
+            color: Colors.transparent,
+          ),
+          onDoubleTap: () {
+            if (ipAdress == 'http://192.168.178.164:3000/') {
+              ipAdress = 'http://192.168.178.95:3000/';
+              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                  content: Text(
+                'IP Adress changed to "http://192.168.178.95:3000/" (Niks PC)',
+              )));
+            } else {
+              ipAdress = 'http://192.168.178.164:3000/';
+              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                content: Text(
+                  'IP Adress changed to "http://192.168.178.164:3000/" (Jennys PC)',
+                ),
+              ));
+            }
+          },
+        )
+      ],
       drawerView: DrawerView.settings,
       body: OrientationBuilder(builder: (context, orientation) {
         return Padding(

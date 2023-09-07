@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:localization/localization.dart';
 import 'package:provider/provider.dart';
 import 'package:the_bartender_app/models/ingredient.dart';
+import 'package:the_bartender_app/models/recipe.dart';
 import 'package:the_bartender_app/models/unit.dart';
 import 'package:the_bartender_app/res/style/app_theme.dart';
 import 'package:the_bartender_app/viewmodels/unit_view_model.dart';
@@ -10,9 +11,13 @@ import 'package:the_bartender_app/widgets/yourCreation/recipeCreateEdit/ingredie
 
 class IngredientEditCard extends StatefulWidget {
   final GlobalKey<FormState> formKey;
+  final RecipeDetail? recipeDetail;
   final Function({List<Ingredient>? ingredientList}) update;
   const IngredientEditCard(
-      {super.key, required this.formKey, required this.update});
+      {super.key,
+      required this.formKey,
+      required this.update,
+      this.recipeDetail});
 
   @override
   State<IngredientEditCard> createState() => _IngredientEditCardState();
@@ -34,16 +39,9 @@ class _IngredientEditCardState extends State<IngredientEditCard> {
     super.initState();
     unitList =
         Provider.of<UnitViewModel>(context, listen: false).unitList ?? [];
-    // unitList = [
-    //   Unit(id: const Uuid().v4(), name: 'l'),
-    //   Unit(id: const Uuid().v4(), name: 'ml'),
-    //   Unit(id: const Uuid().v4(), name: 'cl'),
-    //   Unit(id: const Uuid().v4(), name: 'pieces'),
-    //   Unit(id: const Uuid().v4(), name: 'drop'),
-    //   Unit(id: const Uuid().v4(), name: 'dash'),
-    //   Unit(id: const Uuid().v4(), name: 'leaf')
-    // ];
-    // selectedUnit = unitList.first;
+    if (widget.recipeDetail != null) {
+      ingredients = widget.recipeDetail!.ingredients;
+    }
   }
 
   void addIngredient({Ingredient? ingredient}) {
@@ -111,7 +109,13 @@ class _IngredientEditCardState extends State<IngredientEditCard> {
                                     SizedBox(
                                       width: 40,
                                       child: Text(
-                                        ingredient.amount?.toStringAsFixed(ingredient.amount?.truncateToDouble() == ingredient.amount ? 0 : 2) ?? '',
+                                        ingredient.amount?.toStringAsFixed(
+                                                ingredient.amount
+                                                            ?.truncateToDouble() ==
+                                                        ingredient.amount
+                                                    ? 0
+                                                    : 2) ??
+                                            '',
                                         style: AppTheme
                                             .themeData.textTheme.bodyMedium,
                                       ),

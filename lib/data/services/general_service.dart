@@ -48,18 +48,56 @@ class GeneralService extends BaseService {
   Future postData(
       {required RecipeCreate recipe,
       required List<Tool> toolList,
-      required List<Ingredient> ingredientList}) async {
+      required List<Ingredient> ingredientList,
+      required bool isEdited}) async {
     dynamic responseJson;
 
     try {
-      //* Post Recipe
-      await http.post(Uri.parse('${baseUrl}recipe'),
+      //check if recipe was edited or created
+      if (isEdited) {
+        //*Patch Recipe if it was edited
+        await http.patch(
+            Uri.parse('${baseUrl}recipe?recipe_id=eq.${recipe.recipeId}'),
+            headers: {
+              HttpHeaders.contentTypeHeader: 'application/json',
+              HttpHeaders.authorizationHeader:
+                  'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoidGhlX2JhcnRlbmRlciJ9.rBZOey3_D5-A05DRRQD8IDLYXfHhtQjAg0u-g4zQ_XU'
+            },
+            body: jsonEncode(recipe.toMap()));
+      } else {
+        //* Post Recipe if it was created
+        await http.post(Uri.parse('${baseUrl}recipe'),
+            headers: {
+              HttpHeaders.contentTypeHeader: 'application/json',
+              HttpHeaders.authorizationHeader:
+                  'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoidGhlX2JhcnRlbmRlciJ9.rBZOey3_D5-A05DRRQD8IDLYXfHhtQjAg0u-g4zQ_XU'
+            },
+            body: jsonEncode(recipe.toMap()));
+      }
+
+      //* Delete References to Tools and Ingredients from edited Recipe (then add it later)
+      if (isEdited) {
+        //* Delete Tool References
+        await http.delete(
+          Uri.parse('${baseUrl}recipe2tool?recipe_id=eq.${recipe.recipeId}'),
           headers: {
             HttpHeaders.contentTypeHeader: 'application/json',
             HttpHeaders.authorizationHeader:
                 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoidGhlX2JhcnRlbmRlciJ9.rBZOey3_D5-A05DRRQD8IDLYXfHhtQjAg0u-g4zQ_XU'
           },
-          body: jsonEncode(recipe.toMap()));
+        );
+
+        //* Delete Ingredients References
+        await http.delete(
+          Uri.parse(
+              '${baseUrl}recipe2ingredient?recipe_id=eq.${recipe.recipeId}'),
+          headers: {
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.authorizationHeader:
+                'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoidGhlX2JhcnRlbmRlciJ9.rBZOey3_D5-A05DRRQD8IDLYXfHhtQjAg0u-g4zQ_XU'
+          },
+        );
+      }
 
       //* Post Recipe2Tool
       if (toolList.isNotEmpty) {

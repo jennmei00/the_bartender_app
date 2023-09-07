@@ -7,13 +7,14 @@ import 'package:the_bartender_app/models/tool.dart';
 class RecipeCreateRepository {
   final BaseService _recipeService = GeneralService();
 
-  Future<dynamic> postData(
-      {required RecipeCreate recipe,
-      required List<Tool> toolList,
-      required List<Ingredient> ingredientList}) async {
-
+  Future<dynamic> postData({
+    required RecipeCreate recipe,
+    required List<Tool> toolList,
+    required List<Ingredient> ingredientList,
+    required bool isEdited,
+  }) async {
     dynamic response = await _recipeService.postData(
-        recipe: recipe, ingredientList: ingredientList, toolList: toolList);
+        recipe: recipe, ingredientList: ingredientList, toolList: toolList, isEdited: isEdited);
 
     return response;
   }

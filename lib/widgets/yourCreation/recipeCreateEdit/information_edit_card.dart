@@ -3,6 +3,7 @@ import 'package:duration_picker/duration_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:localization/localization.dart';
 import 'package:provider/provider.dart';
+import 'package:the_bartender_app/models/recipe.dart';
 import 'package:the_bartender_app/models/season.dart';
 import 'package:the_bartender_app/models/tool.dart';
 import 'package:the_bartender_app/res/style/app_theme.dart';
@@ -14,6 +15,7 @@ import 'package:the_bartender_app/widgets/styled_drop_down.dart';
 
 class InformationEditCard extends StatefulWidget {
   final GlobalKey<FormState> formKey;
+  final RecipeDetail? recipeDetail;
   final Function(
       {int? prepTime,
       Season? season,
@@ -23,6 +25,7 @@ class InformationEditCard extends StatefulWidget {
     super.key,
     required this.update,
     required this.formKey,
+    this.recipeDetail,
   });
 
   @override
@@ -45,12 +48,19 @@ class _InformationEditCardState extends State<InformationEditCard> {
     super.initState();
     seasonList =
         Provider.of<SeasonViewModel>(context, listen: false).seasonList ?? [];
-    selectedSeason = seasonList.firstWhere((element) =>
-        element.id == 'a7bedcc8-7be6-42bb-9214-51a2b8067c96'); //*All Season ID
-    widget.update(season: selectedSeason);
-
     toolList =
         Provider.of<ToolViewModel>(context, listen: false).toolList ?? [];
+    if (widget.recipeDetail == null) {
+      selectedSeason = seasonList.firstWhere((element) =>
+          element.id ==
+          'a7bedcc8-7be6-42bb-9214-51a2b8067c96'); //*All Season ID
+      widget.update(season: selectedSeason);
+    } else {
+      prepTime = widget.recipeDetail!.prepTimeMinutes;
+      selectedSeason = widget.recipeDetail!.season;
+      selectedToolList = widget.recipeDetail!.tools ?? [];
+      isAlchoholic = widget.recipeDetail!.alcoholic;
+    }
   }
 
   @override
@@ -131,9 +141,9 @@ class _InformationEditCardState extends State<InformationEditCard> {
                         child: StyledDropDown(
                           seasonDropDown: true,
                           onChanged: (value) {
-                            widget.update(season: value);
+                            widget.update(season: seasonList.firstWhere((element) => element.id == value));
                             setState(() {
-                              selectedSeason = value;
+                              selectedSeason =  seasonList.firstWhere((element) => element.id == value);
                             });
                           },
                           season: selectedSeason,
@@ -154,7 +164,9 @@ class _InformationEditCardState extends State<InformationEditCard> {
                               : CommunityMaterialIcons.glass_cocktail_off)),
                       Expanded(
                         child: Text(
-                          isAlchoholic ? 'alcoholic'.i18n() : 'non_alcoholic'.i18n(),
+                          isAlchoholic
+                              ? 'alcoholic'.i18n()
+                              : 'non_alcoholic'.i18n(),
                           style: AppTheme.themeData.textTheme.bodyMedium,
                         ),
                       ),

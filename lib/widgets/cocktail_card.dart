@@ -10,7 +10,9 @@ import 'package:the_bartender_app/viewmodels/recipe_detail_view_model.dart';
 
 class CocktailCard extends StatelessWidget {
   final Recipe recipe;
-  const CocktailCard({super.key, required this.recipe});
+  final bool isEditable;
+  const CocktailCard(
+      {super.key, required this.recipe, this.isEditable = false});
 
   @override
   Widget build(BuildContext context) {
@@ -87,6 +89,7 @@ class CocktailCard extends StatelessWidget {
           .fetchRecipeData(recipe.id);
     }
 
-    AutoRouter.of(context).push(RecipeDetailViewRoute(recipeName: recipe.name));
+    AutoRouter.of(context).push(
+        RecipeDetailViewRoute(recipeName: recipe.name, isEditable: isEditable));
   }
 }
