@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:localization/localization.dart';
+import 'package:the_bartender_app/config/token.dart';
 import 'package:the_bartender_app/data/api/api_exception.dart';
 import 'package:the_bartender_app/data/services/base_service.dart';
 import 'package:http/http.dart' as http;
@@ -18,7 +19,7 @@ class GeneralService extends BaseService {
       final response = await http.get(Uri.parse(baseUrl + url), headers: {
         HttpHeaders.contentTypeHeader: 'application/json',
         HttpHeaders.authorizationHeader:
-            'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoidGhlX2JhcnRlbmRlciJ9.rBZOey3_D5-A05DRRQD8IDLYXfHhtQjAg0u-g4zQ_XU'
+            BEAR_TOKEN
       });
       responseJson = returnResponse(response);
     } on SocketException {

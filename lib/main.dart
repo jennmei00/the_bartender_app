@@ -48,6 +48,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider.value(value: RecipeCreateViewModel()),
       ],
       child: MaterialApp.router(
+        debugShowCheckedModeBanner: false,
         title: 'The Bartender',
         theme: AppTheme.themeData,
         routerDelegate: _appRouter.delegate(
