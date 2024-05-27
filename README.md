@@ -1,16 +1,13 @@
-# the_bartender_app
+# The Bartender
 
-A new Flutter project.
+Developed with Flutter/Dart using the MVVM-Pattern.
 
-## Getting Started
+The database is stored in a relational database using PostgreSQL.
+The data query takes place via endpoints of a REST API using PostgREST.
 
-This project is a starting point for a Flutter application.
+## Short Overview:
+The Bartender is a digital cocktail recipe book.
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+You can create your own Creation with all the Informations such as duration, season, if its alcoholic or non alcoholic, some instruction, description and of course the ingredients.
+View your own recipes with the option to edit them.
+Overview of all recipes with filter and search options.
