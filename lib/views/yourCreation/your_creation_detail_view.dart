@@ -103,7 +103,7 @@ class _YourCreationDetailViewState extends State<YourCreationDetailView> {
       isInstructionValide = true;
     }
     if (isIngredientsValide && isInstructionValide) {
-      //if recipeDetail != null, then the recipe was edited and not created
+      //*if recipeDetail != null, then the recipe was edited and not created
       User user =
           User(id: sharedPreferences!.getString('UserID') ?? '', username: '');
       RecipeCreate recipe = RecipeCreate(
@@ -119,7 +119,6 @@ class _YourCreationDetailViewState extends State<YourCreationDetailView> {
         alcoholic: alcoholic,
         instruction: instructions!,
         description: '',
-        rating: 0,
         seasonId: selectedSeason!.id,
         drinkTypeId: widget.drinkType.id,
         userId: user.id,
@@ -151,7 +150,7 @@ class _YourCreationDetailViewState extends State<YourCreationDetailView> {
         if (value.status == Status.completed) {
           if (widget.recipeDetail != null) {
             Navigator.of(context).pop(); //*Go to previous page
-            //*Reload Detail Page 
+            //*Reload Detail Page
             Navigator.of(context).pop(); //*Pop detail page
             Provider.of<RecipeDetailViewModel>(context, listen: false)
                 .fetchRecipeData(widget.recipeDetail!.id);
@@ -162,12 +161,12 @@ class _YourCreationDetailViewState extends State<YourCreationDetailView> {
                 const SnackBar(content: Text('Recipe sucessfully edited')));
           } else {
             Navigator.of(context).pop(); //*Go to previous page
-            ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Recipe sucessfully posted')));
+            ScaffoldMessenger.of(context)
+                .showSnackBar(SnackBar(content: Text('saved_recipe'.i18n())));
           }
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Something went wrong!')));
+              SnackBar(content: Text('something_went_wrong'.i18n())));
         }
       });
     }
@@ -242,16 +241,19 @@ class _YourCreationDetailViewState extends State<YourCreationDetailView> {
                 InformationEditCard(
                   update: informationCallback,
                   formKey: informationFormKey,
+                  recipeDetail: widget.recipeDetail,
                 ),
                 const Divider(),
                 IngredientEditCard(
                   update: ingredientsCallback,
                   formKey: ingredientsFormKey,
+                  recipeDetail: widget.recipeDetail,
                 ),
                 const Divider(),
                 InstructionEditCard(
                   update: instructionsCallback,
                   formKey: instructionsFormKey,
+                  recipeDetail: widget.recipeDetail,
                 ),
               ],
             )

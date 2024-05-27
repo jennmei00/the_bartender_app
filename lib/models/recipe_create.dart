@@ -9,7 +9,6 @@ class RecipeCreate {
   bool alcoholic;
   String instruction;
   String description;
-  double rating;
   //TODOImage
   String seasonId;
   String drinkTypeId;
@@ -24,7 +23,6 @@ class RecipeCreate {
     required this.alcoholic,
     required this.instruction,
     required this.description,
-    required this.rating,
     required this.seasonId,
     required this.drinkTypeId,
     required this.userId,
@@ -53,7 +51,6 @@ class RecipeCreate {
       alcoholic: alcoholic ?? this.alcoholic,
       instruction: instruction ?? this.instruction,
       description: description ?? this.description,
-      rating: rating ?? this.rating,
       seasonId: seasonId ?? this.seasonId,
       drinkTypeId: drinkTypeId ?? this.drinkTypeId,
       userId: userId ?? this.userId,
@@ -71,7 +68,6 @@ class RecipeCreate {
     result.addAll({'alcoholic': alcoholic});
     result.addAll({'instruction': instruction});
     result.addAll({'description': description});
-    result.addAll({'rating': rating});
     result.addAll({'season_id': seasonId});
     result.addAll({'drink_type_id': drinkTypeId});
     result.addAll({'user_id': userId});
@@ -89,7 +85,6 @@ class RecipeCreate {
       alcoholic: map['alcoholic'] ?? false,
       instruction: map['instruction'] ?? '',
       description: map['description'] ?? '',
-      rating: map['rating']?.toDouble() ?? 0.0,
       seasonId: map['season_id'] ?? '',
       drinkTypeId: map['drink_type_id'] ?? '',
       userId: map['user_id'] ?? '',
