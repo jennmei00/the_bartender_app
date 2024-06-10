@@ -19,6 +19,8 @@
 .project
 .settings/
 .vscode/
+# Sensible Data
+**/lib/config
 # Flutter repo-specific
 /bin/cache/
 /bin/internal/bootstrap.bat
