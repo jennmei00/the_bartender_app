@@ -19,8 +19,8 @@ class StyledButton extends StatelessWidget {
       onPressed: onButtonPressed,
       style: color != null
           ? AppTheme.themeData.elevatedButtonTheme.style!.copyWith(
-              foregroundColor: MaterialStateProperty.all(color),
-              shape: MaterialStateProperty.all(
+              foregroundColor: WidgetStateProperty.all(color),
+              shape: WidgetStateProperty.all(
                 RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30),
                     side: BorderSide(color: color!, width: 3)),

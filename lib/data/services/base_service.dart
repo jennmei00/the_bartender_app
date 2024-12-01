@@ -5,7 +5,7 @@ import 'package:the_bartender_app/utils/globals.dart';
 
 abstract class BaseService {
   final String baseUrl = ipAdress ??
-      'http://192.168.178.164:3000/'; //  /192.168.178.164 => PC *.95 => Laptop
+      'http://192.168.178.31:3000/'; //  /192.168.178.164 => PC *.95 => Laptop
 
   Future<dynamic> getResponse(String url);
   Future<dynamic> postData(
